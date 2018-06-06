@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title></title>
+    <script  src="js/rastertiles.js"></script>
+    <!-- Fonts -->
+     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
+    <link href="app.css" media="screen" rel="stylesheet" type="text/css" />
+
+
+    <!-- Semantic UI -->
+    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+
+    <script src="semantic/dist/semantic.min.js"></script>
+    <script src="semantic/dist/components/dropdown.js"></script>
+    <link rel="stylesheet" type="text/css" href="semantic/dist/components/dropdown.min.css">
+
+
+
+
+    <!-- Axios -->    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <!-- D3 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/d3v3.js"></script>
+
+    <!-- Mapbox -->
+     
+     <script src="https://cartodb-libs.global.ssl.fastly.net/mapbox-gl/v0.44.1-carto1/mapbox-gl.js"></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css' type='text/css' />
+
+   
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+    <link href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" rel="stylesheet">
+    
+    <!-- CARTO  -->
+    <script src="https://cartodb-libs.global.ssl.fastly.net/carto.js/v4.0.2/carto.min.js"></script>
+  
+    <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
+
+
+    <!-- side by side -->
+    <script src="js/leaflet-side-by-side.js"></script>
+
+    <!-- Variables -->
+    
+    <script  src="js/cities.js"></script>
+
+
+
+    <!-- Custom Styling -->
+    <link rel="stylesheet" type="text/css" href="css/mainNew.css">
+  </head>
+  <body>
+
+
+
+  <!-- <div id='map'></div> -->
+  <div id='before' class='map'>
+    <!-- <div id='titleLeft'>Test</div> -->
+  </div>
+  
+  <div id='after' class='map'>
+    <div id='titleRight'>Census</div>
+  </div>
+  
+
+  <div class="ui vertical icon menu">
+    <a class="item">
+      <i class="gamepad icon"></i>
+    </a>
+    <a class="item">
+      <i class="video camera icon"></i>
+    </a>
+    <a class="item">
+      <i class="video play icon"></i>
+    </a>
+  </div>
+  <!-- Widget Panel -->
+  <div id ='info'>
+    <h2> The Legacy of Redlining
+    </h2>
+
+
+   <!--  <div id = "yearDowndown1" class="ui fluid search selection dropdown">
+      <input type="hidden" name="year">
+      <i class="dropdown icon"></i>
+      <div class="default text">Year</div>
+      <div id='yearDropdown' class="menu">
+      </div>
+    </div> -->
+    <div>   
+      <button class="ui mini compact button year">1930</button>
+      <button class="ui mini compact button year">1940</button>
+      <button class="ui mini compact button year">1950</button>
+      <button class="ui mini compact button year">1960</button>
+      <button class="ui mini compact button year">1970</button>
+      <button class="ui mini compact button year">1980</button>
+      <button class="ui mini compact button year">1990</button>
+      <button class="ui mini compact button year">2000</button>
+      <button class="ui mini compact button year">2010</button>
+      <button class="ui mini compact button year">2016</button>
+    </div>
+  
+    <!-- <h5> Select City</h5> -->
+    <div id = "cityDropdown1" class="ui fluid search selection dropdown">
+      <input type="hidden" name="year">
+      <i class="dropdown icon"></i>
+      <div class="text">Cleveland</div>
+      <div id='cityDropdown' class="menu"></div>
+    </div>
+    <h5 > Select Census Category</h5>
+    <div>   
+      <button class="ui mini compact button census" value='white_perc'>White</button>
+      <button class="ui mini compact button census"value='colored_perc'>Colored</button>
+      <button class="ui mini compact button census" value='unemploy_perc'>Unemployment</button>
+      <button class="ui mini compact button census" value='college_perc'>Higher Ed</button>
+      <button class="ui mini compact button census"value='median_income'>Income (adj 2015)</button>
+    </div>
+    <div class='infoDesc1'>  </div>
+   
+
+    <div class ='boxPlot'></div>
+    <div class='infoDesc2'> </div>
+    <div class ='historicalBoxPlot'></div>
+  
+  </div>
+
+
+  </body>
+  <footer>
+
+    <script src='js/main.js'></script>
+    <script src='js/box.js'></script>
+    <script src='js/charts.js'></script>
+    
+
+
+  </footer>
+</html>

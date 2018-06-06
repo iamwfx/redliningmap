@@ -1,0 +1,10 @@
+.slider{
+	margin-top:10px;
+}
+	.slider>.inner{
+		height:50px;
+	}
+table tr:hover {
+  background: #ffc6c6;
+  transition: background-color 0.5s ease;
+}
