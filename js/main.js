@@ -346,22 +346,22 @@ function popUp(interactivity,popUp,map,outlineColor){
 	    popUp.setHTML(`
 	    <div>
 	      <h4>${vars.city.value}: Grade ${vars.holc_grade.value}</h4>
-	      <p id="description">Population: ${vars.population.value.toFixed(0)}
+	      <p id="description">Population: ${numberWithCommas(parseInt(vars.population.value))}
 	      <br>
 	      White: ${100*vars.white_perc.value.toFixed(2) + '%'}
 	      <br>
 	      Colored: ${(100*vars.colored_perc.value).toFixed(2) + '%'}
 	      <br>
-	      College-Educated: ${(100*vars.colored_perc.value).toFixed(2) + '%'}
+	      College-Educated: ${(100*vars.college_perc.value).toFixed(2) + '%'}
 	      <br>
 	      Unemployment: ${(100*vars.unemploy_perc.value).toFixed(2) + '%'}
 	      <br>
-	      Median income (adj 2015): ${'$'+(100*vars.median_income.value).toFixed(0)}
+	      Median income (adj 2015): ${'$'+(numberWithCommas(parseInt(vars.median_income.value)))}
 	      </p>
 	    </div>
 	    `);
 	    
-	    popUp.setLngLat([event.coordinates.lng, event.coordinates.lat]);
+	    popUp.setLngLat([event.coordinates.lng, event.coordinates.lat+.008]);
 	    if (!popUp.isOpen()) {
 	      popUp.addTo(map);
 	    }
@@ -397,24 +397,10 @@ function getBoundsAllSQL(city){
 }
  
 })
-
-// function updatePopup(event) {
-//   if (event.features.length > 0) {
-//     const vars = event.features[0].variables;
-//     console.log(vars);
-//     console.log(event.coordinates.lng, event.coordinates.lat);
-//     popupRight.setHTML(`
-//     <div>
-//       <h3 class ="h3">${vars.city.value}: grade ${vars.grade.value}</h3>
-//       <p class="description open-sans">Population: ${vars.population.value}</h3>
-//     </div>
-//     `);
-
-//     popupRight.setLngLat([event.coordinates.lng, event.coordinates.lat]);
-//     if (!popupRight.isOpen()) {
-//       popupRight.addTo(mapCensus);
-//     }
-//   } else {
-//     popupRight.remove();
-//   }
-// }
+function numberWithCommas(x) {
+    x = x.toString();
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(x))
+        x = x.replace(pattern, "$1,$2");
+    return x;
+}
