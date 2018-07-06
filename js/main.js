@@ -19,10 +19,11 @@ const holc_tiles = {1930:'holc_overlay_1930',
 
 const holc_classes =['A','B','C','D']
 const holc_colors = ['#5fce23', '#0bc0ed', '#ffd419', '#ff4b19']
-
+const holc_colors_dict = {'A':'5fce23','B':'0bc0ed','C':'ffd419','D':'ff4b19'}
 const s = carto.expressions;
 const categoryRampDict ={'colored_perc':s.palettes.PINKYL,
 						'white_perc':s.palettes.TEAL,
+						'hispanic_perc':s.palettes.TEAL,
 						'median_income':s.palettes.EMRLD,
 						'unemploy_perc':s.palettes.REDOR,
 						'college_perc':s.palettes.BURG}
@@ -36,11 +37,46 @@ var year = '2016';
 var city='Cleveland';
 var category ='colored_perc';
 
+
+
 /////////////////////////////
-/// Initialize year buttons//
+/// Initialize the buttons///
 /////////////////////////////
-var $buttonsYear  = $('.button.year');
+var $buttonsYear  = $('#yearSlider>svg>g>.slider>.parameter-value>text');
 var $buttonsCensus  = $('.button.census');
+var cityList = cities[parseInt(year)].sort();
+$cityDropdown.empty();
+$.each(cityList, function() {
+$cityDropdown.append($('<div class="item" data-value="'+this+'">'+this+'</div>'))})
+
+
+
+///////////////////////////
+/// Insert Year Selector //
+///////////////////////////
+data = [1930,1940,1950,1960,1970,1980,1990,2000,2010,2016]
+var yearSlider = d3.sliderHorizontal()
+    .min(1930)
+    .max(2016)
+    .marks(data)
+    .ticks(12)
+    .width(320)
+    .tickFormat(d3.format("d"))
+    .default(2016);
+
+  var g = d3.select("div#yearSlider").append("svg")
+    .attr("width", 360)
+    .attr("height", 70)
+    .append("g")
+    .attr("transform", "translate(18,24)");
+
+  g.call(yearSlider);
+
+  d3.select("p#value2").text((yearSlider.value()));
+  d3.select("a#setValue2").on("click", () => yearSlider.value(5));
+
+
+
 
 //////////////////////////
 // Add base line layers //
@@ -167,16 +203,18 @@ SQL_CLIENT = axios.create({
 ////// Initialize Charts ////////
 /////////////////////////////////
 yearBoxPlot(getBoundsSQL(city,year),category);
+console.log("city is", city)
 historicalBoxPlot(getBoundsAllSQL(city),'colored_perc');
 
 /////////////////////////////////
 // Change layer on year change //
 /////////////////////////////////
-$buttonsYear.on('click', function(){
-    	$.each($buttonsYear,function(i,v){v.classList.remove("active")});
+// $buttonsYear.on('change', function(){
+$buttonsYear.bind("DOMSubtreeModified",function(){
+    	// $.each($buttonsYear,function(i,v){v.classList.remove("active")});
 
     	year = this.innerHTML;
-    	this.classList.add("active");
+    	// this.classList.add("active");
     	const holcOverlaySource =new carto.source.SQL(`
 	  		select * from holc_overlay_${year}`,
 	  		{
@@ -185,13 +223,12 @@ $buttonsYear.on('click', function(){
 		})
 	  	;
 
-
 	  	holcOverlayLayerCensus.update(holcOverlaySource, holcOverlayLayerCensus.getViz());
 	  	
 	  	// Change the available cities
-	  	var city = cities[year].sort();
+	  	var cityList = cities[parseInt(year)].sort();
 	  	$cityDropdown.empty();
-	  	$.each(city, function() {
+	  	$.each(cityList, function() {
 			$cityDropdown.append($('<div class="item" data-value="'+this+'">'+this+'</div>'))
 	   	
     })
@@ -278,8 +315,8 @@ $buttonsCensus.on('click',function(){
 /// Get initial chart and map parameters //
 ///////////////////////////////////////////
 // Set the default year
-$(".button.year:contains('2016')").click();
-$(".button.census:contains('% Colored')").click();
+// $(".button.year:contains('2016')").click();
+$(".button.census:contains('Colored')").click();
 
 ///////////////////////////////////////////
 /////////// Set the chart titles //////////
@@ -319,12 +356,15 @@ function popUp(interactivity,popUp,map,outlineColor){
 	interactivity.on('featureEnter', event => {
 	  if (event.features.length > 0) {
 	    const feature = event.features[0];
+	    const vars = event.features[0].variables;
 	    // console.log("Features are",event.features);
 	    if (feature.id !== clickedFeatureId) {
 	    	
-	      
-	      feature.strokeWidth.blendTo('4', delay);
-	      feature.strokeColor.blendTo(`opacity(${outlineColor},1)`, delay);
+	      // console.log('color is',holc_colors_dict[vars.holc_grade.value]);
+	      // feature.strokeWidth.blendTo('4', delay);
+	      feature.color.blendTo(`opacity(#${holc_colors_dict[vars.holc_grade.value]},1)`, delay)
+	      // feature.strokeColor.blendTo(`opacity(#${holc_colors_dict[vars.holc_grade.value]},1)`, delay)
+	      // feature.strokeColor.blendTo(`opacity(${holc_colors_dict[vars.holc_grade_x.value]},1)`, delay);
 	    }
 	  }
 	});
@@ -332,9 +372,10 @@ function popUp(interactivity,popUp,map,outlineColor){
 	  if (event.features.length > 0) {
 	    const feature = event.features[0];
 	    if (feature.id !== clickedFeatureId) {
-	      feature.color.reset(delay);
+	      // feature.color.reset(delay);
 	      feature.strokeWidth.reset(delay);
-	      feature.strokeColor.reset(delay);
+	      feature.color.reset(delay);
+	      // feature.strokeColor.reset(delay);
 	    }
 	  }
 	});
@@ -356,7 +397,7 @@ function popUp(interactivity,popUp,map,outlineColor){
 	      <br>
 	      Unemployment: ${(100*vars.unemploy_perc.value).toFixed(2) + '%'}
 	      <br>
-	      Median income (adj 2015): ${'$'+(numberWithCommas(parseInt(vars.median_income.value)))}
+	      Median income (adj 2016): ${'$'+(numberWithCommas(parseInt(vars.median_income.value)))}
 	      </p>
 	    </div>
 	    `);
@@ -393,6 +434,7 @@ function getBoundsSQL(city,year){
 }
 function getBoundsAllSQL(city){
 	sql = "select  * from holc_overlay_all as a, (select st_envelope(the_geom) as envelope from holc_overlay_"+year+" where city='"+city+"') as b  where a.the_geom &&b.envelope"
+	console.log(sql)
 	return sql
 }
  

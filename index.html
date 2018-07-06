@@ -22,7 +22,10 @@
     <link rel="stylesheet" type="text/css" href="semantic/dist/components/dropdown.min.css">
 
 
+    <!-- Range Slider -->
+    <script src="js/d3-simple-slider-wfx.js"></script>
 
+    
 
     <!-- Axios -->    
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -91,28 +94,9 @@
   <div id ='info'>
     <h2> The Legacy of Redlining
     </h2>
+    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lorem lectus, auctor et erat blandit, commodo ullamcorper diam. Aenean nisl velit, ultricies sit amet massa id, dapibus gravida felis. </p>
 
-
-   <!--  <div id = "yearDowndown1" class="ui fluid search selection dropdown">
-      <input type="hidden" name="year">
-      <i class="dropdown icon"></i>
-      <div class="default text">Year</div>
-      <div id='yearDropdown' class="menu">
-      </div>
-    </div> -->
-    <div>   
-      <button class="ui mini compact button year">1930</button>
-      <button class="ui mini compact button year">1940</button>
-      <button class="ui mini compact button year">1950</button>
-      <button class="ui mini compact button year">1960</button>
-      <button class="ui mini compact button year">1970</button>
-      <button class="ui mini compact button year">1980</button>
-      <button class="ui mini compact button year">1990</button>
-      <button class="ui mini compact button year">2000</button>
-      <button class="ui mini compact button year">2010</button>
-      <button class="ui mini compact button year">2016</button>
-    </div>
-  
+    
     <!-- <h5> Select City</h5> -->
     <div id = "cityDropdown1" class="ui fluid search selection dropdown">
       <input type="hidden" name="year">
@@ -120,13 +104,19 @@
       <div class="text">Cleveland</div>
       <div id='cityDropdown' class="menu"></div>
     </div>
-    <h5 > Select Census Category</h5>
+    <div >
+      <div id="yearSlider"></div>
+    </div>
+
+    <!-- <h5 > Select Census Category</h5> -->
     <div>   
       <button class="ui mini compact button census" value='white_perc'>White</button>
       <button class="ui mini compact button census"value='colored_perc'>Colored</button>
+      <button class="ui mini compact button census"value='hispanic_perc'>Hispanic</button>
+      <button class="ui mini compact button census"value='other_perc'>Other</button>
       <button class="ui mini compact button census" value='unemploy_perc'>Unemployment</button>
       <button class="ui mini compact button census" value='college_perc'>Higher Ed</button>
-      <button class="ui mini compact button census"value='median_income'>Income (adj 2015)</button>
+      <button class="ui mini compact button census"value='median_income'>Income (adj 2016)</button>
     </div>
     <div class='infoDesc1'>  </div>
    
@@ -144,6 +134,7 @@
     <script src='js/main.js'></script>
     <script src='js/box.js'></script>
     <script src='js/charts.js'></script>
+    
     
 
 

@@ -4,6 +4,7 @@ var data_dict ={};
 var holc_colors = ['#5fce23', '#0bc0ed', '#ffd419', '#ff4b19'];
 var catDict ={'white_perc':'white percentage',
             'colored_perc':"colored percentage",
+            'hispanic_perc':"Hispanic percentage",
             'unemploy_perc':'unemployment rate',
             'median_income':"median income",
             'college_perc':'higher ed. percentage'}
@@ -18,10 +19,10 @@ const dur = 1500;
 ///////////////////////////////////////
 const whiskerLen = 1;
 const boxMargin = 2;
-var chart1BoxWidth = 85;
-var chart1Height = 200
-var chart2Width = 350
-var chart2Height = 200
+var chart1BoxWidth = 120;
+var chart1Height = 180;
+var chart2Width = 360;
+var chart2Height = 180;
 
 var t = d3.transition().duration(dur);
 
@@ -30,7 +31,7 @@ function yearBoxPlot(query,category){
     var width = infoPanelDiv.clientWidth;
     var height = infoPanelDiv.clientHeight;
     chart1BoxWidth = width/4-10;
-    chart1Height = (height-400)/2;
+    // chart1Height = (height-400)/2;
     console.log(chart1BoxWidth);
 
     SQL_CLIENT.request({
@@ -51,7 +52,7 @@ function yearBoxPlot(query,category){
 
             // var category = 'white_perc';
             var city = $('.text').text();
-            var year = $('.button.year.active').text();
+            var year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
             $.each(dataReturned,function(i,v){
 
                 if (v['holc_grade_y']=='A'){
@@ -100,7 +101,7 @@ function yearBoxPlot(query,category){
             data_dict = {'A':vals_A,'B':vals_B,'C':vals_C,'D':vals_D}
             dataUsed = [vals_A[category],vals_B[category],vals_C[category],vals_D[category]]
         
-        
+            
     
             // Dimension of the individual boxes
             var margin = {top: 10, right: 33, bottom: 10, left: 33},
@@ -143,9 +144,10 @@ function yearBoxPlot(query,category){
 
                 category= $(this).val();
                 city = $('.text').text();
-                year = $('.button.year.active').text();
+                year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text()
                 
                 dataNew= [vals_A[category],vals_B[category],vals_C[category],vals_D[category]]
+                
                 updateBoxPlot(dataNew);
 
                 updateText1(city,category,year,dataNew);
@@ -157,7 +159,7 @@ function yearBoxPlot(query,category){
             $('#cityDropdown1').on('change',function(){
                 category = $('.button.census.active').val();
                 city = $('.text').text();
-                year = $('.button.year.active').text();
+                year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text()
                 console.log(category,city,year);
 
                 query = getBoundsSQL(city,year);
@@ -233,15 +235,17 @@ function yearBoxPlot(query,category){
 
                         updateBoxPlot(dataNew);
                         updateText1(city,category, year,dataNew);
+                        updateText2(city,category);
                     }
                 })
             })
-            $('.button.year').on('click',function(){
+            // $('.button.year').on('click',function(){
+            $('#yearSlider>svg>g>.slider>.parameter-value>text').bind("DOMSubtreeModified",function(){
 
                 category = $('.button.census.active').val();
                 city = $('.text').text();
                 // year = $(this).text();
-                year = $('.button.year.active').text();
+                year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
                 console.log(category,city,year);
                 query=getBoundsSQL(city,year);
                 console.log(query);
@@ -313,10 +317,11 @@ function yearBoxPlot(query,category){
         
 
 
-                    console.log(d3.median(vals_A[catNew]));
+                    console.log(d3.mean(vals_A[catNew]));
                     updateBoxPlot(dataNew);
-                    console.log("dataNew",dataNew[0]);
-                    updateText1(city,category, year,dataNew)
+                    
+                    updateText1(city,category, year,dataNew);
+                    
                 }
                 })
             })
@@ -330,6 +335,8 @@ function yearBoxPlot(query,category){
                         maxHolder.push(v.reduce(getMax));
                     });
                     // .reduce(getMin);
+                    console.log(min);
+                    console.log(max);
                     min = minHolder.reduce(getMin);
                     max = maxHolder.reduce(getMax);
                     chart.domain([min, max]);
@@ -359,8 +366,8 @@ function historicalBoxPlot(query,category){
     var infoPanelDiv = document.getElementById("info");
     var width = infoPanelDiv.clientWidth;
     var height = infoPanelDiv.clientHeight;
-    chart2Width = width-50;
-    chart2Height = (height-400)/2;
+    chart2Width = width-30;
+    // chart2Height = (height-400)/2;
 
     var margin = {top: 10, right: 10, bottom: 20, left:40},
             width = chart2Width - margin.left - margin.right,
@@ -410,7 +417,7 @@ function historicalBoxPlot(query,category){
             /// Define chart domain //
             //////////////////////////
             var city = $('.text').text();
-            var year = $('.button.year.active').text();
+            var year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
             var result1 = calcMinMax(valsUse,category);
             var min =result1['min'] ;
             var max =result1['max'] ;
@@ -535,6 +542,7 @@ function historicalBoxPlot(query,category){
             $('.button.census').on('click',function(){
                 city = $('.text').text();
                 catNew = this.value;
+                console.log(catNew);
                 
                 //////////////////////////////
                 ///// Reset the y axis ///////
@@ -544,10 +552,12 @@ function historicalBoxPlot(query,category){
                 updateText2(city,catNew);
             })
 
-            $('.button.year').on('click',function(){
+            // $('.button.year').on('click',function(){
+            $('#yearSlider>svg>g>.slider>.parameter-value>text').bind("DOMSubtreeModified",function(){
+    
                 console.log("year changed!");
 
-                var year = $('.button.year.active').text();
+                var year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
                 console.log(year);
                 var t = d3.transition().duration(dur);
 
@@ -567,7 +577,7 @@ function historicalBoxPlot(query,category){
             $('#cityDropdown1').on('change',function(){
                 
 
-                year = $('.button.year.active').text();
+                year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
                 city = $('.text').text();
                 query = getBoundsAllSQL(city);
 
@@ -845,7 +855,7 @@ function loadWords(){
     return [word,word2]
     }
 function updateText1(city,category, year,data){
-    text1= `<span>In ${year}, ${city} had a median ${catDict[category]} of </span>`
+    text1= `<span>In ${year}, ${city} had a ${catDict[category]} of </span>`
     if(category=='median_income'){
         var format =d3.format("$.3s")
         // textA = format(d3.mean(vals_A[category]))
@@ -875,7 +885,7 @@ function updateText1(city,category, year,data){
 
 }
 function updateText2(city,category){
-    text2= `<span>Historical trends for mean ${catDict[category]} in ${city}.</span>`
+    text2= `<span>Historical trends for ${catDict[category]} in ${city}.</span>`
      $( ".infoDesc2" ).fadeOut(Math.floor(dur/2), function() {
         // $('.infoDesc1').remove();
         $('.infoDesc2').html(text2);
