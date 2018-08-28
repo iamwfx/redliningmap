@@ -62,7 +62,7 @@ d3v3.box = function() {
       var center = g.selectAll("line.center")
           .data(whiskerData ? [whiskerData] : []);
 
-      console.log("rect width is ",width);
+
       // $(window).resize(width);
       // $(window).resize(height);
       center.enter().insert("line", "rect")
@@ -216,17 +216,6 @@ d3v3.box = function() {
           .duration(duration)
           .attr("y", x1);
 
-      // boxTick.enter().append("text")
-      //     .attr("class", "box")
-      //     .attr("dy", ".3em")
-      //     .attr("dx", function(d, i) { return i & 1 ? 6 : -6 })
-      //     .attr("x", function(d, i) { return i & 1 ? width : 0 })
-      //     .attr("y", x0)
-      //     .attr("text-anchor", function(d, i) { return i & 1 ? "start" : "end"; })
-      //     .text(format)
-      //   .transition()
-      //     .duration(duration)
-      //     .attr("y", x1);
 
       boxTick.transition()
           .duration(duration)

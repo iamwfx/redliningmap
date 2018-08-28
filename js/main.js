@@ -1,10 +1,148 @@
+//Globals
+const catDict ={'white_perc':'% White',
+            'colored_perc':"% Black",
+            'hispanic_perc':"% Hispanic",
+            'other_perc':"% Other races",
+            'population':"Population",
+            'population_density':"Population density (ppl/sq-km)",
+            'unemployed_perc':'% Unemployment',
+            'median_income_adj':"Median household income (adj. 2016)",
+            'college_perc':'% Higher education'}
+const catDict1 ={'% White':'white_perc',
+            "% Black":'colored_perc',
+            "% Hispanic":'hispanic_perc',
+            "% Other races":'other_perc',
+            "Population":'population',
+            "Population density (ppl/sq-km)":'population_density',
+            '% Unemployment':'unemployed_perc',
+            "Median household income (adj. 2016)":'median_income_adj',
+            '% Higher education':'college_perc'}
+
+function getBoundsSQL(city,year){
+
+	// sql = `select a.* from holc_overlay_2016 as a where a.the_geom &&  ST_MakeEnvelope( ${sqlBounds['lng_min']},${sqlBounds['lat_min']},${sqlBounds['lng_max']},${sqlBounds['lat_max']}, 4326)`
+	// sql = "select  * from holc_overlay_"+year+" as a, (select st_envelope(the_geom) as envelope from holc_overlay_"+year+" where city='"+city+"') as b  where  st_intersects(a.the_geom,b.envelope)"
+	sql = `select  * from holc_overlay_${year} where city='${city}'`
+	return sql
+}
+function getBoundsAllSQL(city){
+	// sql = "select  * from holc_overlay_all as a, (select st_envelope(the_geom) as envelope from holc_overlay_"+year+" where city='"+city+"') as b  where st_intersects(a.the_geom,b.envelope)"
+	sql = `select  * from holc_overlay_all where city ='${city}' `
+	return sql
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
+$('.introButton').on('click',function(){
+ 	$('.dimmer').removeClass('active');
+ 	$('.blurring.dimmable>:not(.dimmer)').css('filter','none');
+ 	
+});
+
+// setTimeout(location.reload.bind(location), 60000);
+
+
 $(document).ready(function() {
+/////////////////////////////
+///////// Page functions ////
+/////////////////////////////
 
 
+$('.homeIcon').on('click',function(){
+	$('.dimmer').addClass('active');
+})
 
-////////////////////////////
-// initialize dropdown /////
-////////////////////////////
+$('.infoIcon').on('click',function(){
+	$('#infoMessage').transition('fade in');
+})
+
+$('.message .close')
+  .on('click', function() {
+    $(this)
+      .closest('.message')
+      .transition('fade')
+    ;
+  });
+
+// Color dict for the legend
+const censusCatDict = {
+			"colored_perc":[
+		            '#f0d9dd',
+		            '#f2afb9',
+		            '#ef8491',
+		            '#e75567',
+		            '#d9033c'
+		        ],
+    		"hispanic_perc": [
+	            '#e1bee7',
+	            '#ba68c8',
+	            '#9c27b0',
+	            '#7b1fa2',
+	            '#4a148c'],
+		    "white_perc":  [
+		        '#e8eaf6',
+		        '#7986cb',
+		        '#3f51b5',
+		        '#303f9f',
+		        '#1a237e'],
+    		"other_perc": [
+		           '#ffe0b2',
+		            '#ffb74d',
+		           '#ff9800',
+		            '#f57c00',
+		            '#e65100'
+		        ],
+		    "median_income_adj": [
+	            "#cf597e",
+	            "#e88471",
+	            "#eeb479",
+	            "#e9e29c",
+	            "#9ccb86",
+	            "#39b185",
+	            "#009392"
+	        ],
+		    "population": [
+		            "#f3e0f7",
+		            "#e4c7f1",
+		            "#d1afe8",
+		            "#b998dd",
+		            "#9f82ce",
+		            "#826dba",
+		            "#63589f"
+		        ],
+		    "population_density": [
+		            "#d1eeea",
+		            "#a8dbd9",
+		            "#85c4c9",
+		            "#68abb8",
+		            "#4f90a6",
+		            "#3b738f",
+		            "#2a5674"
+		        ],
+		    "college_perc":[
+		            "#DEEACC",
+		            "#AACF92",
+		            "#72B461",
+		            "#39993A",
+		            "#1B7E2F"
+		        ],
+		    "unemployed_perc": [
+		        '#F2DDDF',
+		        '#DE98A2',
+		        '#CA5C6C',
+		        '#B6293F',
+		        '#A2001A']
+		       }
+
+
+/////////////////////////////////
+//////// initial parameters /////
+/////////////////////////////////
+
 const holc_tiles = {1930:'holc_overlay_1930',
 				1940:'holc_overlay_1940',
 				1950:'holc_overlay_1950',
@@ -17,58 +155,87 @@ const holc_tiles = {1930:'holc_overlay_1930',
 				2016:'holc_overlay_2016'
 	}
 
-const holc_classes =['A','B','C','D']
-const holc_colors = ['#5fce23', '#0bc0ed', '#ffd419', '#ff4b19']
+// const holc_classes =['A','B','C','D']
+// const holc_colors = ['#5fce23', '#0bc0ed', '#ffd419', '#ff4b19']
+
 const holc_colors_dict = {'A':'5fce23','B':'0bc0ed','C':'ffd419','D':'ff4b19'}
 const s = carto.expressions;
-const categoryRampDict ={'colored_perc':s.palettes.PINKYL,
-						'white_perc':s.palettes.TEAL,
-						'hispanic_perc':s.palettes.TEAL,
-						'median_income':s.palettes.EMRLD,
-						'unemploy_perc':s.palettes.REDOR,
-						'college_perc':s.palettes.BURG}
 
 
+// const catDict ={'white_perc':'% White',
+//             'colored_perc':"% Black",
+//             'hispanic_perc':"% Hispanic",
+//             'other_perc':"% Other races",
+//             'population':"Population",
+//             'population_density':"Population density (ppl/sq-km)",
+//             'unemployed_perc':'% Unemployment',
+//             'median_income_adj':"Median household income (adj. 2016)",
+//             'college_perc':'% Higher education'}
+// const catDict1 ={'% White':'white_perc',
+//             "% Black":'colored_perc',
+//             "% Hispanic":'hispanic_perc',
+//             "% Other races":'other_perc',
+//             "Population":'population',
+//             "Population density (ppl/sq-km)":'population_density',
+//             '% Unemployment':'unemployed_perc',
+//             "Median household income (adj. 2016)":'median_income_adj',
+//             '% Higher education':'college_perc'}
 
-var $cityDropdown = $("#cityDropdown");
-$('#cityDropdown1').dropdown();
-
+/// Definite the initial category parameters
 var year = '2016';
 var city='Cleveland';
 var category ='colored_perc';
 
 
 
-/////////////////////////////
-/// Initialize the buttons///
-/////////////////////////////
-var $buttonsYear  = $('#yearSlider>svg>g>.slider>.parameter-value>text');
-var $buttonsCensus  = $('.button.census');
+/////////////////////////////////
+// initialize city dropdown /////
+/////////////////////////////////
+var $cityDropdown = $("#cityDropdown");
+$('#cityDropdown1').dropdown();
 var cityList = cities[parseInt(year)].sort();
+
 $cityDropdown.empty();
 $.each(cityList, function() {
 $cityDropdown.append($('<div class="item" data-value="'+this+'">'+this+'</div>'))})
 
 
 
+/////////////////////////////////
+/// Initialize Census dropdown///
+////////////////////////////////
+var $censusDropdown = $("#censusDropdown");
+$('#censusDropdown1').dropdown();
+var censusList1 = censusFeatures[parseInt(year)];
+// var censusList1 = ['population_density','white_perc','colored_perc','hispanic_perc','other_perc','unemployed_perc','college_perc','median_income_adj'];
+$censusDropdown.empty();
+$.each(censusList1, function(k,v) {
+	$censusDropdown.append($('<div class="item" data-value="'+v+'">'+catDict[v]+'</div>'))
+})
+
+
+
 ///////////////////////////
 /// Insert Year Selector //
 ///////////////////////////
-data = [1930,1940,1950,1960,1970,1980,1990,2000,2010,2016]
+years = [1930,1940,1950,1960,1970,1980,1990,2000,2010,2016]
+var infoPanelDiv = document.getElementById("info");
+var marginLeft = 40;
+var width = infoPanelDiv.clientWidth-marginLeft;
 var yearSlider = d3.sliderHorizontal()
     .min(1930)
-    .max(2016)
-    .marks(data)
+    .max(2020)
+    .marks(years)
     .ticks(12)
-    .width(320)
+    .width(width-40)
     .tickFormat(d3.format("d"))
     .default(2016);
 
   var g = d3.select("div#yearSlider").append("svg")
-    .attr("width", 360)
-    .attr("height", 70)
+    .attr("width", width)
+    .attr("height", 50)
     .append("g")
-    .attr("transform", "translate(18,24)");
+    .attr("transform", "translate(18,10)");
 
   g.call(yearSlider);
 
@@ -84,19 +251,15 @@ var yearSlider = d3.sliderHorizontal()
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiaWFtd2Z4IiwiYSI6ImNqNGFnMnIyMzEwZzgycXJ1ODdqbG14eGMifQ.3AqBqXZlcbsbEhxddAPB-g';
 const mapRedline = new mapboxgl.Map({
-    container: 'before', // container id
-    // style: 'mapbox://styles/iamwfx/cji3e7sqn14gy2rpjxkndti3s',
-    style: 'mapbox://styles/iamwfx/cjfho5no7dpef2ro3oikl6jpc', // stylesheet location
-    // style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    container: 'left', // container id
+    style:'mapbox://styles/iamwfx/cjjx6bl926vgt2ss0l9dbpmxz', // LightLite
     center:[-81.681290,41.505493], // starting position [lng, lat]
     zoom: 10 // starting zoom
   });
 
 const mapCensus = new mapboxgl.Map({
-      container: 'after',
-      // style:'mapbox://styles/iamwfx/cji3e7sqn14gy2rpjxkndti3s',
-      style: 'mapbox://styles/iamwfx/cjfho5no7dpef2ro3oikl6jpc', // stylesheet location
-      // style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      container: 'right',
+      style:'mapbox://styles/iamwfx/cj84yjo8702b82smocliue4pn', // Light
       center: [-81.681290,41.505493],
       zoom: 10
     });
@@ -111,11 +274,8 @@ const map = new mapboxgl.Compare(mapRedline, mapCensus, {
     // mousemove: true
 });
 
-// const holcOverlaySource = new carto.source.Dataset('holc_overlay_2016',{
-// 	  user:  keys['carto']['username'],
-// 	  apiKey: keys['carto']['token']
-// 	});
-const holcOverlaySource = new carto.source.SQL(`
+
+var holcOverlaySource = new carto.source.SQL(`
 	SELECT * from holc_overlay_2016
 	`, {
 	  user:  'parksgps',
@@ -123,30 +283,38 @@ const holcOverlaySource = new carto.source.SQL(`
 	});
 
 /////// Census
-const holcOverlayVizCensus = new carto.Viz(`
+var holcOverlayVizCensus = new carto.Viz(`
   
   @city:$city
   @holc_grade:$holc_grade_x
   @population:$population
+  @population_density:$population_density
   @white_perc:$white_perc
   @colored_perc:$colored_perc
-  @median_income:$median_income
-  @unemploy_perc:$unemploy_perc
+  @median_income_adj:$median_income_adj
+  @hispanic_perc:$hispanic_perc
+  @other_perc:$other_perc
+  @unemployed_perc:$unemployed_perc
+  @unemployed_perc_css:$unemployed_perc*10
   @college_perc:$college_perc
-  color: opacity(ramp(globalQuantiles($colored_perc,5), PINKYL),.7)
+  color: opacity(ramp(viewportQuantiles($colored_perc,5), PINK_WX),@colored_perc*1.5)
   strokeWidth: 0
-  // strokeColor: rgba(255, 255, 255,0.01)
+  strokeColor: rgba(255, 255, 255,0.01)
 `);
 
 ///// Redline
-const holcOverlayVizRedline = new carto.Viz(`
+var holcOverlayVizRedline = new carto.Viz(`
   @city:$city
   @holc_grade:$holc_grade_x
   @population:$population
+  @population_density:$population_density
   @white_perc:$white_perc
   @colored_perc:$colored_perc
-  @median_income:$median_income
-  @unemploy_perc:$unemploy_perc
+  @median_income_adj:$median_income_adj
+  @hispanic_perc:$hispanic_perc
+  @other_perc:$other_perc
+  @unemployed_perc:$unemployed_perc
+  @unemployed_perc_css:$unemployed_perc*10
   @college_perc:$college_perc
   color: opacity(ramp(buckets($holc_grade_x,['A','B','C','D']),[#5fce23,#0bc0ed,#ffd419,#ff4b19,#ff4b19]),.5)
   strokeWidth: 1
@@ -154,12 +322,33 @@ const holcOverlayVizRedline = new carto.Viz(`
 `);
 
 
-const holcOverlayLayerCensus = new carto.Layer('holcOverlayLayerCensus', holcOverlaySource, holcOverlayVizCensus);
+var holcOverlayLayerCensus = new carto.Layer('holcOverlayLayerCensus', holcOverlaySource, holcOverlayVizCensus);
 holcOverlayLayerCensus.addTo(mapCensus);
 
-const holcOverlayLayerRedline = new carto.Layer('holcOverlayLayerRedline', holcOverlaySource, holcOverlayVizRedline);
+var holcOverlayLayerRedline = new carto.Layer('holcOverlayLayerRedline', holcOverlaySource, holcOverlayVizRedline);
 holcOverlayLayerRedline.addTo(mapRedline);
 
+
+// disable map rotation using right click + drag
+mapCensus.dragRotate.disable();
+mapRedline.dragRotate.disable();
+
+// disable map rotation using touch rotation gesture
+mapCensus.touchZoomRotate.disableRotation();
+mapRedline.touchZoomRotate.disableRotation();
+
+
+mapCensus.addControl(new mapboxgl.NavigationControl(),'bottom-right');
+
+//////////////////////////////
+//////////// Add bbox ////////
+//////////////////////////////
+
+var lng1=mapCensus.getBounds()['_ne']['lng'];
+var lat1=mapCensus.getBounds()['_ne']['lat'];
+var lng2=mapCensus.getBounds()['_sw']['lng'];
+var lat2=mapCensus.getBounds()['_sw']['lat'];
+var bbox= [[lng1,lat1],[lng2,lat2]];
 
 
 //////////////////////////////
@@ -170,162 +359,161 @@ mapRedline.on('load',function(){
 
 	rastertiles.forEach(function(element){
 		if (element.type =='raster'){
+			// console.log(element);
 			mapRedline.addLayer({
 				id:element.name,
 				type: 'raster',
 				source:{
 					type:'raster',
 					url:'mapbox://'+element.id
+					// tiles: ['https://api.mapbox.com/v4/'+element.id+'/{z}/{x}/{y}.png?access_token='+mapboxgl.accessToken],
 				},
 				paint:{
 					 'raster-opacity':0.5
 				},
+				 // minzoom: 0,
+    	// 		maxzoom: 22
 				'source-layer':element.name
 			})
 
-			
 		}})
 
 
 })
 
-/////////////////////////////////
-// Initialize the sql client ////
-/////////////////////////////////
-SQL_CLIENT = axios.create({
-    method: 'get',
-    url: 'https://' + 'parksgps' + '.carto.com/api/v2/sql?',
-    params: {
-        api_key:  'a5egxawWBp3cGSA9Fcxd4A'
-    }})
+///////////////////////////////////////////////////////
+////// Allow enter on initalized charts and map ///////
+///////////////////////////////////////////////////////
+mapRedline.on('load', (ev) => {
+	yearBoxPlot(getBoundsSQL(city,year),category);
+	$.when(historicalBoxPlot(getBoundsAllSQL(city),'colored_perc')).then(
+		$("#undim").removeClass("loading disabled"));
+});
+
 
 /////////////////////////////////
-////// Initialize Charts ////////
+////// Add in the Legend ////////
 /////////////////////////////////
-yearBoxPlot(getBoundsSQL(city,year),category);
-console.log("city is", city)
-historicalBoxPlot(getBoundsAllSQL(city),'colored_perc');
 
-/////////////////////////////////
-// Change layer on year change //
-/////////////////////////////////
-// $buttonsYear.on('change', function(){
-$buttonsYear.bind("DOMSubtreeModified",function(){
-    	// $.each($buttonsYear,function(i,v){v.classList.remove("active")});
+updateLegend(city,category,year,mapCensus,bbox);
 
-    	year = this.innerHTML;
-    	// this.classList.add("active");
-    	const holcOverlaySource =new carto.source.SQL(`
-	  		select * from holc_overlay_${year}`,
-	  		{
-		  user: 'parksgps',
-		  apiKey: 'a5egxawWBp3cGSA9Fcxd4A'
+
+/////////////////////////////////////////////////
+// Change info panel and legend on year change //
+/////////////////////////////////////////////////
+
+$('#yearSlider>svg>g>.slider>.parameter-value>text').bind('DOMSubtreeModified',function(){
+	
+	/// Establish the parameters
+	var city  = $('#cityDropdown1 .text').text();
+	year = this.innerHTML;
+	var category = catDict1[$('#censusDropdown1 .text').text()];
+	
+	// Change the available cities
+  	cityList = cities[parseInt(year)].sort();
+  	$cityDropdown.empty();
+  	$.each(cityList, function() {
+		$cityDropdown.append($('<div class="item" data-value="'+this+'">'+this+'</div>'))
+   		
 		})
-	  	;
 
-	  	holcOverlayLayerCensus.update(holcOverlaySource, holcOverlayLayerCensus.getViz());
-	  	
-	  	// Change the available cities
-	  	var cityList = cities[parseInt(year)].sort();
-	  	$cityDropdown.empty();
-	  	$.each(cityList, function() {
-			$cityDropdown.append($('<div class="item" data-value="'+this+'">'+this+'</div>'))
-	   	
-    })
+  	// Change the available census features
+  	censusList1 = censusFeatures[parseInt(year)];
+  	$censusDropdown.empty();
+	$.each(censusList1, function(k,v) {
+	$censusDropdown.append($('<div class="item" data-value="'+v+'">'+catDict[v]+'</div>'))})
+	
 
+	
+
+
+	// If the current city isn't in the new list, then default to the first on the list
+	if ($.inArray(city,cityList)==-1){
+		city = cityList[0];
+		$('#cityDropdown1 .text').text(city)
+
+		
+	}
+	// If the current category isn't in the new list, then default to the first on the list
+	if ($.inArray(category,censusList1)==-1){
+		category=censusList1[0];
+	
+		$('#censusDropdown1 .text').text(catDict[category]);
+	}
+
+	// All the years will get population_density, white, and black
+	censusList1_amend = censusFeatures[parseInt(year)].slice(4); 
+
+	holcOverlaySource =new carto.source.SQL(`
+  		select * from holc_overlay_${year} where city ='${city}'`,
+  		{
+	  user: 'parksgps',
+	  apiKey: 'a5egxawWBp3cGSA9Fcxd4A'
+	})
+  	;
+  	updateCensusMap(city,category,year,holcOverlayLayerCensus,holcOverlaySource)
+  	
+  	// holcOverlayLayerCensus.update(holcOverlaySource, holcOverlayLayerCensus.getViz());
+
+  	
+	updateLegend(city,category,year,mapCensus,bbox)
   })
 
 
 /////////////////////////////////
 // Change layer on city change //
 /////////////////////////////////
-$('#cityDropdown1').dropdown({
-	onChange:function(val){ 
-		city =val;
-		const holcOverlaySource =new carto.source.SQL(`
+$('#cityDropdown1').on('change',function(){
+		console.log('city changed2');
+		/// Establish the parameters
+		// Get the new features
+                newFeatures = getFeatures();
+                category=newFeatures[0]
+                city = newFeatures[1]
+                year = newFeatures[2]
+
+		// city =val;
+		// year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
+		// category = catDict1[$('#censusDropdown1 .text').text()];
+
+		 holcOverlaySource =new carto.source.SQL(`
 	  		select * from holc_overlay_${year}
-	  		where city = '${val}'
+	  		where city = '${city}'
 	  		`,
 	  		{
-		  user: 'parksgps',
-		  apiKey: 'a5egxawWBp3cGSA9Fcxd4A'
-		})
-		holcOverlayLayerCensus.update(holcOverlaySource, holcOverlayLayerCensus.getViz());
-		
-		// const boundsQuery = "SELECT st_X(st_centroid(st_union(st_centroid(the_geom)))) as cent_lng,st_Y(st_centroid(st_union(st_centroid(the_geom)))) as cent_lat from holc_overlay_"+year+" where city ='"+val+"'";
-		
-		const boundsQuery = "SELECT ST_XMin(st_extent(the_geom)) as xmin, ST_YMin(st_extent(the_geom)) as ymin, ST_XMax(st_extent(the_geom)) as xmax, ST_YMax(st_extent(the_geom)) as ymax from holc_overlay_"+year+" where city ='"+val+"'";
+			  user: 'parksgps',
+			  apiKey: 'a5egxawWBp3cGSA9Fcxd4A'
+			})
+		console.log(`
+	  		select * from holc_overlay_${year}
+	  		where city = '${city}'
+	  		`);
+		updateCensusMap(city,category,year,holcOverlayLayerCensus,holcOverlaySource);
 
-		 SQL_CLIENT.request({
-		        params: {
-		            q: boundsQuery
-		        },
-		    }).then(function (response) {
-		        if (response && response.data) {
-		            // cent_lng= response.data.rows[0]['cent_lng'];
-		            // cent_lat= response.data.rows[0]['cent_lat'];
-		            box_min_x= response.data.rows[0]['xmin'];
-		            box_min_y= response.data.rows[0]['ymin'];
-		            box_max_x= response.data.rows[0]['xmax'];
-		            box_max_y= response.data.rows[0]['ymax'];
-		            var bbox = [[
-				        box_min_x,
-				        box_min_y
-				    ], [
-				        box_max_x,
-				        box_max_y
-				    ]];
-		            mapCensus.fitBounds(bbox,{linear:true}
-				    );
-
-				}});
-			}
+	
 
 })
 /////////////////////////////////
 // Change layer on cat change ///
 /////////////////////////////////
-$buttonsCensus.on('click',function(){
-	$.each($buttonsCensus,function(i,v){v.classList.remove("active")});
-	category = this.value;
-	this.classList.add("active");
 
-	const holcOverlayVizCensusNew = new carto.Viz({
-		variables:{
-			city:s.prop('city'),
-			holc_grade:s.prop('holc_grade_x'),
-			population:s.prop('population'),
-			white_perc:s.prop('white_perc'),
-			colored_perc:s.prop('colored_perc'),
-			median_income:s.prop('median_income'),
-			unemploy_perc:s.prop('unemploy_perc'),
-			college_perc:s.prop('college_perc')
-	},
-      	color: s.opacity(s.ramp(s.globalQuantiles(s.prop(`${category}`), 5),categoryRampDict[category]),0.7),
-      	strokeWidth: 0
-    });
-    console.log(holcOverlayVizCensusNew);
+$('#censusDropdown1').dropdown({
+	onChange:function(val){ 
 
-    holcOverlayLayerCensus.update(holcOverlaySource,holcOverlayVizCensusNew)
-	// holcOverlayLayerCensus.blendToViz(holcOverlayVizCensus)
+		/// Establish the parameters
+		category = val;
+		city = $('#cityDropdown1 .text').text();
+		year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
 
+		
+		// Update Categeory map
+		updateCensusMap(city,category,year,holcOverlayLayerCensus,holcOverlaySource);
+		//Update legend
+		updateLegend(city,category,year,mapCensus,bbox);
+
+	}
 })
 
-///////////////////////////////////////////
-/// Get initial chart and map parameters //
-///////////////////////////////////////////
-// Set the default year
-// $(".button.year:contains('2016')").click();
-$(".button.census:contains('Colored')").click();
-
-///////////////////////////////////////////
-/////////// Set the chart titles //////////
-///////////////////////////////////////////
-
-// This has to be done after the maps and compare toggle is drawn
-$('#before>.mapboxgl-compare').after(
-	"<div id='titleLeft'>Redline Grades</div>"
-)
 
 
 ///////////////////////////////////////////
@@ -352,22 +540,28 @@ let clickedFeatureId = null;
 popUp(interactivityCensus,popupRight,mapCensus,'red');
 popUp(interactivityRedline,popupLeft,mapRedline,'white');
 
+
+
+///////////////////////////////////
+////////// FUNCTIONS //////////////        
+///////////////////////////////////
 function popUp(interactivity,popUp,map,outlineColor){
+	///// Change the opacity of the highlighted HOLC zone 
 	interactivity.on('featureEnter', event => {
-	  if (event.features.length > 0) {
-	    const feature = event.features[0];
-	    const vars = event.features[0].variables;
-	    // console.log("Features are",event.features);
-	    if (feature.id !== clickedFeatureId) {
-	    	
-	      // console.log('color is',holc_colors_dict[vars.holc_grade.value]);
-	      // feature.strokeWidth.blendTo('4', delay);
-	      feature.color.blendTo(`opacity(#${holc_colors_dict[vars.holc_grade.value]},1)`, delay)
-	      // feature.strokeColor.blendTo(`opacity(#${holc_colors_dict[vars.holc_grade.value]},1)`, delay)
-	      // feature.strokeColor.blendTo(`opacity(${holc_colors_dict[vars.holc_grade_x.value]},1)`, delay);
-	    }
-	  }
+
+		
+		if (event.features.length > 0) {
+		const feature = event.features[0];
+		const vars = event.features[0].variables;
+
+		if (feature.id !== clickedFeatureId) {
+
+		  feature.color.blendTo(`opacity(#${holc_colors_dict[vars.holc_grade.value]},1)`, delay)
+		  
+			}
+		}
 	});
+	///// Change the opacity back
 	interactivity.on('featureLeave', event => {
 	  if (event.features.length > 0) {
 	    const feature = event.features[0];
@@ -375,70 +569,168 @@ function popUp(interactivity,popUp,map,outlineColor){
 	      // feature.color.reset(delay);
 	      feature.strokeWidth.reset(delay);
 	      feature.color.reset(delay);
-	      // feature.strokeColor.reset(delay);
+	      
 	    }
+	    popUp.remove();
 	  }
 	});
 
-
-	interactivity.on('featureHover', event =>{
+	///// On click, display the census info
+	interactivity.on('featureClick', event =>{
+		
 		if (event.features.length > 0) {
 	    const vars = event.features[0].variables;
-	    popUp.setHTML(`
-	    <div>
+
+	    /// Establish the parameters
+		city = $('#cityDropdown1 .text').text();
+		year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
+
+		// All the years will get population_density, white, and black
+		censusList1_amend = censusFeatures[parseInt(year)].slice(4); 
+		
+		/// Display the baseline the numbers (Population, population density, white, and black races)
+	    popUpStr = ` <div>
 	      <h4>${vars.city.value}: Grade ${vars.holc_grade.value}</h4>
 	      <p id="description">Population: ${numberWithCommas(parseInt(vars.population.value))}
+	      <p id="description">Population density (people per sq. km.): ${numberWithCommas(parseInt(vars.population_density.value))}
 	      <br>
-	      White: ${100*vars.white_perc.value.toFixed(2) + '%'}
+	      White: ${d3.format(",.2%")(vars.white_perc.value)}
 	      <br>
-	      Colored: ${(100*vars.colored_perc.value).toFixed(2) + '%'}
-	      <br>
-	      College-Educated: ${(100*vars.college_perc.value).toFixed(2) + '%'}
-	      <br>
-	      Unemployment: ${(100*vars.unemploy_perc.value).toFixed(2) + '%'}
-	      <br>
-	      Median income (adj 2016): ${'$'+(numberWithCommas(parseInt(vars.median_income.value)))}
-	      </p>
-	    </div>
-	    `);
+	      Black: ${d3.format(",.2%")(vars.colored_perc.value)}
+	      <br>`
+
+	    /// If there are other feature available, add them in
+	    if (censusList1_amend.length!=0){
+	    	popUpDict ={
+				'other_perc':`Other:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
+				'college_perc':`Higher Education:  ${d3.format(",.2%")(vars.college_perc.value)} <br>`,
+				'median_income_adj':`Median income (adj 2016):  ${d3.format("$,.0f")(parseInt(vars.median_income_adj.value))} <br>`,
+				}
+	    	if (censusList1_amend.length==4){
+	    		popUpDict ={
+				'other_perc':`Other:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
+				'college_perc':`Higher Education:  ${d3.format(",.2%")(vars.college_perc.value)} <br>`,
+				'median_income_adj':`Median income (adj 2016):  ${d3.format("$,.0f")(parseInt(vars.median_income_adj.value))} <br>`,
+				'hispanic_perc':`Hispanic: ${d3.format(",.2%")(vars.hispanic_perc.value)} <br>`
+				}
+	    	}
+	    	else if (censusList1_amend.length==5){
+	    		popUpDict ={
+				'other_perc':`Other:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
+				'college_perc':`Higher Education:  ${d3.format(",.2%")(vars.college_perc.value)} <br>`,
+				'median_income_adj':`Median income (adj 2016):  ${d3.format("$,.0f")(parseInt(vars.median_income_adj.value))} <br>`,
+				'hispanic_perc':`Hispanic: ${d3.format(",.2%")(vars.hispanic_perc.value)} <br>`,
+				'unemployed_perc':`Unemployment:  ${d3.format(",.2%")(vars.unemployed_perc.value)} <br>`
+				}
+		    	
+			}
+		    $.each(censusList1_amend,function(i,v){
+		    	popUpStr += popUpDict[v];
+		    });
+		 }
+	    popUpStr+=`</p></div>`
+
+	    popUp.setHTML(popUpStr);
+
 	    
-	    popUp.setLngLat([event.coordinates.lng, event.coordinates.lat+.008]);
+	    popUp.setLngLat([event.coordinates.lng, event.coordinates.lat+.003]);
 	    if (!popUp.isOpen()) {
 	      popUp.addTo(map);
 	    }
-	  } else {
+	  	else {
 	    popUp.remove();
-	  }}
-	  );
+	  	}
+
+	  }
+	})
 }
-///////////////////////////////////
-////////// FUNCTIONS //////////////        
-///////////////////////////////////
+// function updateCategoryp(city,category,year,overlay,overlaySource){
 
-function getCitySQL(city){
-	var boundsOrig = mapCensus.getBounds();
-	var sqlBounds = {'lng_min':boundsOrig['_ne']['lng'],
-					'lng_max':boundsOrig['_sw']['lng'],
-					'lat_min':boundsOrig['_sw']['lat'],
-					'lat_max':boundsOrig['_ne']['lat']};
+// }
+function updateCensusMap(city,category,year,overlay,overlaySource){
+
+	///Whenever the category changes, we need to update the following: 
+	// The charts
+	// The map
+	// The legend
+
+	var holcOverlayVizCensusNew;
+	censusList1 = censusFeatures[parseInt(year)];
+	
+	//Update the map
+	////// Set opacities based on the features
+	////// For race percentages, we since we want to highlight higher percentages, 
+	////// We're going to decrease opacity in lower percentages.
+	////// For all other census categories, we'll set a standard opacity of 0.7
+	const censusColors ={
+		'white_perc':'color:opacity(ramp(viewportQuantiles($white_perc,5), BLUE_WX),@white_perc)\n',
+        'colored_perc':"color:opacity(ramp(viewportQuantiles($colored_perc,5), PINK_WX),@colored_perc_css)\n",
+        'hispanic_perc':"color:opacity(ramp(viewportQuantiles($hispanic_perc,5), PURPLE_WX),@hispanic_perc_css)\n",
+        'other_perc':"color:opacity(ramp(viewportQuantiles($other_perc,5), ORANGE_WX),@other_perc_css)\n",
+        'population_density':"color:opacity(ramp(viewportQuantiles($population_density,7), POPULATION_DENS_WX),.8)\n",
+        'population':"color:opacity(ramp(viewportQuantiles($population,7), POPULATION_WX),.8)\n",
+        'college_perc':'color:opacity(ramp(viewportQuantiles($college_perc,5), COLLEGE_WX),@college_perc_css)\n',
+        'median_income_adj':"color:opacity(ramp(viewportQuantiles($median_income_adj,7), INCOME_WX),.7)\n",
+        'unemployed_perc':'color:opacity(ramp(viewportQuantiles($unemployed_perc,5), UNEMPLOY_WX),@unemployed_perc_css)\n'}
+    const vizDict = {'city':`@city:$city\n`,
+		'population_density':`@population_density:$population_density\n`,
+		'population':`@population:$population\n`,
+		'white_perc':`@white_perc:$white_perc\n`,
+		'colored_perc':`@colored_perc:$colored_perc\n@colored_perc_css:$colored_perc*2\n`,
+		'hispanic_perc':`@hispanic_perc:$hispanic_perc\n@hispanic_perc_css:$hispanic_perc*2\n`,
+		'median_income_adj':`@median_income_adj:$median_income_adj\n`,
+		'other_perc':'@other_perc:$other_perc\n@other_perc_css:$other_perc*4\n',
+		'unemployed_perc':`@unemployed_perc:$unemployed_perc\n@unemployed_perc_css:$unemployed_perc*10\n`,
+		'college_perc':`@college_perc:$college_perc\n@college_perc_css:$college_perc*4\n`}
+	
+	/// For each year and category we need to create a new literal for the carto viz.
+	vizString = `strokeWidth: 0\n@city:$city \n @holc_grade:$holc_grade_x\n`,
+
+	$.each(censusList1,function(i,v){
+		
+		vizString+=vizDict[v]
+	})	  
+	// String that represents the choropleth scheme for the map
+	vizString+=	censusColors[category]
+	
+	var holcOverlayVizCensusNew = new carto.Viz(vizString);
 
 
-	sql = "select a.* from holc_overlay_2016 as a where a.city='"+city+"'"
-	return sql
-}
-function getBoundsSQL(city,year){
+	//Update overlay layer
+	overlay.update(overlaySource,holcOverlayVizCensusNew);
 
-	// sql = `select a.* from holc_overlay_2016 as a where a.the_geom &&  ST_MakeEnvelope( ${sqlBounds['lng_min']},${sqlBounds['lat_min']},${sqlBounds['lng_max']},${sqlBounds['lat_max']}, 4326)`
-	sql = "select  * from holc_overlay_"+year+" as a, (select st_envelope(the_geom) as envelope from holc_overlay_"+year+" where city='"+city+"') as b  where a.the_geom &&b.envelope"
-	return sql
-}
-function getBoundsAllSQL(city){
-	sql = "select  * from holc_overlay_all as a, (select st_envelope(the_geom) as envelope from holc_overlay_"+year+" where city='"+city+"') as b  where a.the_geom &&b.envelope"
-	console.log(sql)
-	return sql
+	// Zoom to new city
+	boundsQuery = "SELECT ST_XMin(st_extent(the_geom)) as xmin, ST_YMin(st_extent(the_geom)) as ymin, ST_XMax(st_extent(the_geom)) as xmax, ST_YMax(st_extent(the_geom)) as ymax from holc_overlay_"+year+" where city ='"+city+"'";
+		
+	$.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+boundsQuery, function(data) {
+		lng1= data.rows[0]['xmin'];
+        lat1= data.rows[0]['ymin'];
+        lng2= data.rows[0]['xmax'];
+        lat2= data.rows[0]['ymax'];
+        bbox = [[
+	        lng1,
+	        lat1
+	    ], [
+	        lng2,
+	        lat2
+	    ]];
+
+	    /// change map to new city and then update the legend
+	    mapCensus.fitBounds(bbox,{linear:true, padding:20});
+	    // updateCategory(city,category,year,holcOverlayLayerCensus,holcOverlaySource);
+	    updateLegend(city,category,year,mapCensus,bbox)
+	 // $.when(mapCensus.fitBounds(bbox,{linear:true, padding:20})).then(
+	 // 	updateLegend(city,category,year,mapCensus,bbox));
+
+
+
+	});
+
+	
+
 }
  
-})
+
 function numberWithCommas(x) {
     x = x.toString();
     var pattern = /(-?\d+)(\d{3})/;
@@ -446,3 +738,71 @@ function numberWithCommas(x) {
         x = x.replace(pattern, "$1,$2");
     return x;
 }
+
+function updateLegend(city,category,year,mapCensus,bbox){
+    lng1=bbox[0][0]
+    lat1=bbox[0][1]
+    lng2=bbox[1][0]
+    lat2=bbox[1][1]
+	
+    // var quantileQuery = "SELECT  CDB_QuantileBins(array_agg("+category+"), "+censusCatDict[category].length+") FROM holc_overlay_"+year+" where st_intersects(the_geom,ST_SetSRID(ST_MakeBox2D(ST_Point("+lng1+", "+lat1+"), ST_Point("+lng2+", "+lat2+")), 4326))";
+    var quantileQuery = `SELECT  CDB_QuantileBins(array_agg(${category}),${censusCatDict[category].length}) FROM holc_overlay_${year} where city='${city}'`;
+
+    $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+quantileQuery, function(data) {
+    	$('.censusLegend').empty();
+	 	$('.censusLegend').append($('<h5 class="header smallHeader ">'+city+' '+catDict[category].replace(/\b\w/g, l => l.toUpperCase())+'</h5><div class="legendBar"></div>'));
+	 	
+	 	var x = d3.scaleLinear().range([0, 100]);
+	 	const barWidth = parseInt(220/censusCatDict[category].length);
+
+	 	const svg = d3.select(".legendBar").append("svg")
+                .attr("width", 250)
+                .attr("height",60)
+        const g = svg.append("g")
+                .attr("transform", "translate(15,0)");
+        
+        ///Formatter
+        var formattedNum;
+       	if(category=='median_income_adj'){
+        		var formatNum =d3.format("$.03s");
+        	}
+        	else if((category=='population') |(category=='population_density')){
+        		var formatNum =d3.format(".3s");
+        	}
+        	else{
+        		var formatNum=d3.format(",.2%");
+        	}
+
+        /// Create an array of legend values
+	    var legendValues= data['rows'][0]['cdb_quantilebins']
+	    legendValues.unshift(0);
+
+		for (i=0; i<censusCatDict[category].length+1;i++){
+			legendValues[i] = formatNum(legendValues[i]);
+		}
+
+		/// Draw the legend
+		g.selectAll("rect")
+		    .data(censusCatDict[category].map(function(d,i){return [i,d,legendValues[i]]}))
+		    .enter().append("rect")
+				.attr("height", 20)
+				.attr("x", function(d){return (d[0])*barWidth})
+				.attr("width", barWidth)
+				.attr("fill",function(d){return d[1]})
+		g.selectAll("tick")
+			.data(legendValues.map(function(d,i){return [i,d]}))
+			.enter().append("text")
+				.attr("class", "caption")
+				.attr("x",function(d){return (d[0])*barWidth})
+				.attr("y", 30)
+				.attr("fill", "#000")
+				.attr("font-size", "10px")
+				.attr("text-anchor", "middle")
+				.attr("font-family",'Source Sans Pro')
+				.text(function(d){return d[1]});
+
+
+	})
+}
+
+})

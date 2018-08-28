@@ -5,138 +5,238 @@
     <title></title>
     <script  src="js/rastertiles.js"></script>
     <!-- Fonts -->
-     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
-    <link href="app.css" media="screen" rel="stylesheet" type="text/css" />
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Semantic UI -->
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    
     crossorigin="anonymous"></script>
-
     <script src="semantic/dist/semantic.min.js"></script>
     <script src="semantic/dist/components/dropdown.js"></script>
     <link rel="stylesheet" type="text/css" href="semantic/dist/components/dropdown.min.css">
-
-
     <!-- Range Slider -->
     <script src="js/d3-simple-slider-wfx.js"></script>
-
     
-
-    <!-- Axios -->    
+    <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-
     <!-- D3 -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="js/d3v3.js"></script>
-
     <!-- Mapbox -->
-     
-     <script src="https://cartodb-libs.global.ssl.fastly.net/mapbox-gl/v0.44.1-carto1/mapbox-gl.js"></script>
+    
+    <script src="https://cartodb-libs.global.ssl.fastly.net/mapbox-gl/v0.44.1-carto1/mapbox-gl.js"></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css' type='text/css' />
-
-   
+    
     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
     <link href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" rel="stylesheet">
     
     <!-- CARTO  -->
-    <script src="https://cartodb-libs.global.ssl.fastly.net/carto.js/v4.0.2/carto.min.js"></script>
-  
-    <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
-
-
-    <!-- side by side -->
-    <script src="js/leaflet-side-by-side.js"></script>
-
-    <!-- Variables -->
+    <script src="js/dist/carto-vl.js"></script>
     
+    <!-- City params -->
     <script  src="js/cities.js"></script>
-
-
-
     <!-- Custom Styling -->
     <link rel="stylesheet" type="text/css" href="css/mainNew.css">
   </head>
-  <body>
+  <body >
+    <div class="ui dimmerwrapper ">
+      <div class="ui page dimmer active">
+        <div class="content ui  very padded  container  introSegment">
+          
+          <h1 class="ui header introHeader">The Legacy of Redlining</h1>
+          <p class="ui  introHeader">The US Home Owner's Loan Corportation (HOLC) "residential security" maps were created in the 1930s to map perceived lending risk in the city, as guide when providing government-guaranteed home mortgages. The neighborhoods with higher risk were often black and other minority neighborhoods.
+          </p>
+          <br>
+          <p class="ui  introHeader">The homeowners in high risk regions were denied Depression-era mortgage bailouts. Many also believe these maps were used in "redlining" - the widespread practice of illegally denying home loans based on race. 
+          </p> 
+          <br>
+          <p class="ui  introHeader">The aim of this resource is to map the relationship between HOLC credit zones and socioeconomic indicators in the more than 80 years since the maps were created. </p> 
+
+          <p class="ui  introHeader">This site currently only works in Chrome. Safari and Firefox coming soon.</p>
+          
+          <!-- <div class="ui primary button">Add</div> -->
+          <div id='undim'class="ui disabled big basic loading inverted button introButton"><b>Enter</b></div>
+        </div>
+      </div>
+
+      <div class = 'container' id='mapcontainer'>
+        <!-- <div id='map'></div> -->
+        <div id='left' class='map'>
+          <!-- <div id='titleLeft'>Test</div> -->
+        </div>
+        
+        <div id='right' class='map'>
+        </div>
+     
+      </div>
+      <div class="container" id="menucontainer">
+       <div class="ui menu fixed secondary">
+          <div class="ui simple dropdown item">
+            
+            <h5 style="margin-bottom: 0px"><i class="sidebar icon"  ></i>  Menu</h5>  
+            <div class="ui menu myMenu secondary">
+              <div class="item compact homeIcon" data-value="home">
+                Home
+              </div>
+              <div class="item compact infoIcon" data-value="info">
+                About 
+                </div>
+              
+      
+              <div class="ui divider"></div>
+              <div class="item compact disabled legendIcon" data-value="legend">
+                <div class='left aligned content'>
+                  <h5 class=" smallHeader">
+                  <!-- <i class="fa fa-info-circle "></i> -->
+                  HOLC Class
+                  </h5>
+                  <ul class="ui list">
+                    <div class="item">
+                      <i class="large square icon classA"></i>Grade A: Best
+                    </div>
+                    <div class="item">
+                      <i class="large square icon classB"></i>Grade B: Still Desirable
+                    </div>
+                    <div class="item"> 
+                      <i class="large square icon classC"></i>Grade C: Definitely Declining
+                    </div>
+                    <div class="item"> 
+                      <i class="large square icon classD"></i>Grade D: Hazardous
+                    </div>
+                  </ul>
+                </div>
+                <br>
+                <div class='left aligned content censusLegend'>
+                  <h5 class="header smallHeader ">
+                  <!-- <i class="fa fa-info-circle "></i> -->
+                  Census Category
+                  </h5>
+
+                </div>
+              </div>
+              
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- Widget Panel -->
+      <div id ='info'>
+        
+        <h5> City</h5>
+        <div id = "cityDropdown1" class="ui fluid search selection dropdown">
+          <input type="hidden" name="year">
+          <i class="dropdown icon"></i>
+          <div class="text">Cleveland</div>
+          <div id='cityDropdown' class="menu"></div>
+        </div>
+        
+        <h5 > Census Category</h5>
+        <div id = "censusDropdown1" class="ui fluid search selection dropdown">
+          <input type="hidden" name="year">
+          <i class="dropdown icon"></i>
+          <div class="text" >% Black</div>
+          <div id='censusDropdown' class="menu"></div>
+        </div>
+        <h5 > Year</h5>
+        <div >
+          <div id="yearSlider"></div>
+        </div>
+        <div class='infoDesc1'>  </div>
+        
+        <div class ='boxPlot'></div>
+        <div class='infoDesc2'> </div>
+        <div class ='historicalBoxPlot'></div>
+        <div >
+          <font size="1px">**The lower and upper percentiles are 40% and 60% for legibility.</font>
+        </div>
+      </div>
+      <!-- Info message -->
+      <div class="ui message floating transition hidden infoSegment" id='infoMessage'>
+        <i class="large close red icon"></i>
+        <h5>History of the HOLC "Redlining" Maps</h5>
+        <p ">The Home Owner's Loan Corportation (HOLC) was a New Deal era agency that helped to establish a government-back mortgage market in the United States. The HOLC created credit worthiness maps that acted as a guide to establish risk by neighborhood. Since risk is based on property values as well as individual credit worthiness, the agency relied on local banks and realtors in 239 cities to appraise neighborhoods based on economic conditions, categorizing them into "Best", "Still Desirable", "Definitely Declining", and "Hazardous".</p>
+        <p>These appraisers often used criteria such as housing conditions, transportation access, distance to amenities and disamentiies, the economic class and status of the neighborhood's residents, and their ethnic and racial composition. (<a href='https://ncrc.org/holc/' target="_blank">NRSC, 2018</a>) The presence of minority (mostly black at the time) homeowners was considered to devalue both the property the neighborhoods; therefore, local appraisers also had an incentive to reinforce racial biases.</p>
+        <p>Many consider the creation of these "residential security maps" to have faciliated residential <a href='https://en.wikipedia.org/wiki/Redlining' target="_blank">redlining</a> - the widespread practice of illegally denying home loans (and the opportunity to build wealth) based on race. The influence of these maps is debated: some argue that these maps directly bolstered governmental redlining (<a href='https://books.google.com/books/about/Crabgrass_Frontier.html?id=XDQC1w1LIFMC' target="_blank">Jackson, 1987</a>, <a href='http://www.hup.harvard.edu/catalog.php?isbn=9780674018211' target="_blank">Massey and Denton, 1993</a>), others have argued these maps were made after 1936, when most of the HOLC bailout loans were provided (<a href='https://repository.upenn.edu/cgi/viewcontent.cgi?article=1008&context=cplan_papers' target="_blank">Hillier, 2003a</a>, <a href='http://journals.sagepub.com/doi/abs/10.1177/0096144203029004002' target="_blank">Hillier, 2003b</a>). However, it is undeniable that there was institutional discrimination against black and other minority neighborhoods. These maps still reflect the perceived lending risk held by banks and other real estate actors.</p>
+        <p>The <a href='https://www.gpo.gov/fdsys/pkg/STATUTE-82/pdf/STATUTE-82-Pg73.pdf' target="_blank">1968 Fair Housing Act</a> made housing discriminination based on "race, color, religion, or national origin" a federal crime. By this point, however, the spatial structure of neighborhood segregation had already been established.</p>
+
+        <p>This map aims to show that the impact of discriminatory housing practices on the landscape American cities and its socioeconomic welfare residents is still seen today. Many of those neighborhoods deemed "Hazardous" or "Definitely Declining" were and remain minority areas with lower levels of income, education, and employment that their counterparts with higher HOLC grades. </p>
+
+        <h5>Data</h5>
+        <p>This map relies heavily on work done by the <a href='https://dsl.richmond.edu/' target="_blank">Digital Scholarship Lab</a>, who geo-referenced the original HOLC maps as well as produced the shapefiles. They have an <a href='https://dsl.richmond.edu/panorama/renewal/#view=0/0/1&viz=cartogram' target="_blank"> interactive feature</a> of all the HOLC maps. They also have a <a href='https://dsl.richmond.edu/panorama/redlining/#loc=4/36.71/-96.93&opacity=0.8' target="_blank">project</a> mapping the impact urban displacement due to "slum" clearance (a.k.a urban renewal) projects during the mid-20th century.</p>
 
 
+        <p>The historical census data comes the IPUMS <a href='https://www.nhgis.org/' target="_blank">National Historical Geographic Information System</a> (NHGIS), University of Minnesota. Because census areas, categories, and collection methods changed every decennial census, comparison between decades is not straightforward. Here are some notes about the Census data used: 
+        </p>
+        <ul>
+          <li>
+            Before the 1940, the census only took place in metropolitan areas. Not all of our cities have coverage in 1930. 
+          </li>
+          <li>
+           Education information is not available until 1940.
+          </li>
+          <li>
+           Income information is not available until 1950.
+          </li>
+          <li>Unemployment information is not available until 1970.</li> 
+          <li>
+            Only starting in the 1960 census was Hispanic origin information collected. The census considers Hispanic origin not be a race but a "heritage, nationality, lineage, or country of birth".
+          </li>
+          <li>
+            Until the 1970 census, the only required races were "White","Black", and "Other non-white".
+          </li>
+          <li>
+            Until the 1980 census, median household income information only exists in ranges. We take the midpoint of each range as the representative income. 
+          </li>
+          <li>
+           All median household incomes have been inflation-adjusted from levels on the year before the census year, as this is the year the information was actually collected, to 2016 levels. For instance, the 1960 census has incomes adjusted from 1959 to 2016. 
+          </li>
+          <li>Staring in 2010, we use the American Community Survey - a monthly rolling survey published annuall - as the longform census (containing additional questions such as education and income) was replaced by the ACS.</li>
+          <li>The 2010 data uses the 2008-2012 5-year American Community Survey as an unbiased estimate of 2010 statistics.</li>
+          <li>The 2016 data uses the 2016 1-year American Community Survey.</li>
+        </ul>
+        <p>To learn more, the US Census Bureau provides a <a href='https://www.census.gov/history/www/through_the_decades/overview/' target="_blank">historical overview</a> of each decade's census.</p>
+        
 
-  <!-- <div id='map'></div> -->
-  <div id='before' class='map'>
-    <!-- <div id='titleLeft'>Test</div> -->
-  </div>
-  
-  <div id='after' class='map'>
-    <div id='titleRight'>Census</div>
-  </div>
-  
+        <h5>Method</h5>
 
-  <div class="ui vertical icon menu">
-    <a class="item">
-      <i class="gamepad icon"></i>
-    </a>
-    <a class="item">
-      <i class="video camera icon"></i>
-    </a>
-    <a class="item">
-      <i class="video play icon"></i>
-    </a>
-  </div>
-  <!-- Widget Panel -->
-  <div id ='info'>
-    <h2> The Legacy of Redlining
-    </h2>
-    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lorem lectus, auctor et erat blandit, commodo ullamcorper diam. Aenean nisl velit, ultricies sit amet massa id, dapibus gravida felis. </p>
+        <p>Each HOLC zone is created through a weighted average of census data for each year, where the weight is the percentage overlap for each tract within the zone. As census units change size, each year's census needs to be calculated separately. Until 1980, we use the smallest geographic unit available, which is the census tract. Starting in 1990, we use census block groups. Following <a href='https://www.chicagofed.org/publications/working-papers/2017/wp2017-12' target="_blank">Aaronson, Hartley, and Mazumder (2017) </a>, census calculations for each zone exclude all tracts that have 15% or less of its area and all block groups that have 25% or less of its area in an HOLC zone.
+        </p>
 
-    
-    <!-- <h5> Select City</h5> -->
-    <div id = "cityDropdown1" class="ui fluid search selection dropdown">
-      <input type="hidden" name="year">
-      <i class="dropdown icon"></i>
-      <div class="text">Cleveland</div>
-      <div id='cityDropdown' class="menu"></div>
+        <h5>Get in touch</h5>
+
+        <p>This project was created by <a href='https://wenfeixu.com' target = "_blank">Wenfei Xu</a>. I am a phd student in urban planning at Columbia GSAAP and a spatial data scientist at CARTO. You can email me at xu.wenfei[at]gmail.com. 
+        </p>
+        <p>
+          <button class="ui circular mini icon button" style="background-color:#ff3700">
+            <a href= "https://twitter.com/iamwfx" target = "_blank"><i class="twitter icon" style="margin-right: 0px;color:white"></i></a>
+          </button>
+           <button class="ui circular mini icon button" style="background-color:#ff3700">
+            <a href= "mailto:xu.wenfei@gmail.com"><i class="envelope icon" style="margin-right: 0px;color:white"></i></a>
+          </button>
+          <button class="ui circular mini icon button" style="background-color:#ff3700">
+            <a href= "https://github.com/iamwfx target = "_blank"><i class="github icon" style="margin-right: 0px;color:white"></i></a>
+          </button>
+          <button class="ui circular mini icon button" style="background-color:#ff3700">
+            <a href= "https://www.instagram.com/therealwfx/?hl=en" target = "_blank"><i class="instagram icon" style="margin-right: 0px;color:white"></i></a>
+          </button>
+        </p>
+      </div>
+
+
+      
     </div>
-    <div >
-      <div id="yearSlider"></div>
-    </div>
-
-    <!-- <h5 > Select Census Category</h5> -->
-    <div>   
-      <button class="ui mini compact button census" value='white_perc'>White</button>
-      <button class="ui mini compact button census"value='colored_perc'>Colored</button>
-      <button class="ui mini compact button census"value='hispanic_perc'>Hispanic</button>
-      <button class="ui mini compact button census"value='other_perc'>Other</button>
-      <button class="ui mini compact button census" value='unemploy_perc'>Unemployment</button>
-      <button class="ui mini compact button census" value='college_perc'>Higher Ed</button>
-      <button class="ui mini compact button census"value='median_income'>Income (adj 2016)</button>
-    </div>
-    <div class='infoDesc1'>  </div>
-   
-
-    <div class ='boxPlot'></div>
-    <div class='infoDesc2'> </div>
-    <div class ='historicalBoxPlot'></div>
-  
-  </div>
-
-
   </body>
   <footer>
-
     <script src='js/main.js'></script>
     <script src='js/box.js'></script>
     <script src='js/charts.js'></script>
     
     
-
-
   </footer>
 </html>

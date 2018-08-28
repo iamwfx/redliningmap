@@ -1,5 +1,5 @@
 /*!
- * # Semantic UI 2.3.1 - Step
+ * # Semantic UI 2.3.3 - Step
  * http://github.com/semantic-org/semantic-ui/
  *
  *
@@ -135,7 +135,7 @@
 
 /* Title */
 .ui.steps .step .title {
-  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.14285714em;
   font-weight: bold;
 }

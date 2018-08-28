@@ -1,5 +1,5 @@
 /*!
- * # Semantic UI 2.3.1 - Form
+ * # Semantic UI 2.3.3 - Form
  * http://github.com/semantic-org/semantic-ui/
  *
  *
@@ -99,7 +99,7 @@
 .ui.form input[type="text"],
 .ui.form input[type="file"],
 .ui.form input[type="url"] {
-  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin: 0em;
   outline: none;
   -webkit-appearance: none;

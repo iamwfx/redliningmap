@@ -1,4 +1,16 @@
-var cities={1930:['Baltimore', 'Chicago', 'Brooklyn', 'Boston', 'Bronx', 'Brookline',
+const censusFeatures = {1930:['population','population_density','white_perc','colored_perc'],
+            1940:['population','population_density','white_perc','colored_perc'],
+            1950:['population','population_density','white_perc','colored_perc','other_perc','college_perc','median_income_adj'],
+            1960:['population','population_density','white_perc','colored_perc','other_perc','college_perc','median_income_adj','hispanic_perc'],
+            1970:['population','population_density','white_perc','colored_perc','other_perc','college_perc','median_income_adj','hispanic_perc'],
+            1980:['population','population_density','white_perc','colored_perc','hispanic_perc','other_perc','college_perc','median_income_adj','unemployed_perc'],
+            1990:['population','population_density','white_perc','colored_perc','hispanic_perc','other_perc','college_perc','median_income_adj','unemployed_perc'],
+            2000:['population','population_density','white_perc','colored_perc','hispanic_perc','other_perc','college_perc','median_income_adj','unemployed_perc'],
+            2010:['population','population_density','white_perc','colored_perc','hispanic_perc','other_perc','college_perc','median_income_adj','unemployed_perc'],
+            2016:['population','population_density','white_perc','colored_perc','hispanic_perc','other_perc','college_perc','median_income_adj','unemployed_perc']}
+
+
+const cities={1930:['Baltimore', 'Chicago', 'Brooklyn', 'Boston', 'Bronx', 'Brookline',
        'Indianapolis', 'Cleveland', 'Columbus', 'Detroit', 'Los Angeles',
        'Lower Westchester Co.', 'Manhattan', 'Milwaukee Co.', 'Queens',
        'Syracuse', 'Pittsburgh', 'St.Louis', 'Staten Island'],
