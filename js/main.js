@@ -390,6 +390,15 @@ mapRedline.on('load', (ev) => {
 		$("#undim").removeClass("loading disabled"));
 });
 
+// window.addEventListener("resize", function(){
+//     // Get the new features
+//     newFeatures = getFeatures()
+//     category=newFeatures[0]
+//     city = newFeatures[1]
+//     year = newFeatures[2]
+//     historicalBoxPlot(getBoundsAllSQL(city),category)
+//     yearBoxPlot(getBoundsSQL(city,year),category)});
+
 
 /////////////////////////////////
 ////// Add in the Legend ////////

@@ -23,9 +23,15 @@ var t = d3.transition().duration(dur);
 
 var category,city,year
 function yearBoxPlot(query,category){     
+
+
     var infoPanelDiv = document.getElementById("info");
     var width = infoPanelDiv.clientWidth;
     var height = infoPanelDiv.clientHeight;
+    // $( window ).resize(function() {
+    //   var width = infoPanelDiv.clientWidth;
+    //     var height = infoPanelDiv.clientHeight;
+    // });
     chart1BoxWidth = width/4-10;
 
     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) {
@@ -37,7 +43,9 @@ function yearBoxPlot(query,category){
             city = newFeatures[1]
             year = newFeatures[2]
             
-            // updateBoxPlotAll();            
+            ////////////////////////////////////////////
+            ////////////// Get the data ////////////////
+            ////////////////////////////////////////////
 
             var dataReturned=data.rows;
             var allCols = Object.keys(dataReturned[0]);
@@ -101,7 +109,7 @@ function yearBoxPlot(query,category){
             chart.domain([min, max]);
 
 
-            console.log("first",city,year,dataNew);
+
             var svg = d3v3.select(".boxPlot").selectAll("svg")
                   .data(dataNew)
                 .enter().append("svg")
@@ -142,7 +150,6 @@ function yearBoxPlot(query,category){
             // Update plot on city and year change
             $('#cityDropdown1').dropdown({
                 onChange:function(val){ 
-                console.log('city changed');
                 updateBoxPlotAll()
             }
             });
@@ -206,9 +213,7 @@ function yearBoxPlot(query,category){
                         
                         //// Fill missing data
                         dataNew= fillMissingData([data_dict['A'][category],data_dict['B'][category],data_dict['C'][category],data_dict['D'][category]],1);
-                        
-                        console.log("second",city,year,dataNew);
-                        /// For each cateogry, get the min and max                        
+                                                /// For each cateogry, get the min and max                        
                         $.each(dataNew,function(i,v){
                         if(v==null){
                             
@@ -236,8 +241,6 @@ function yearBoxPlot(query,category){
 
 
 }
-// )}
-
 
 function historicalBoxPlot(query,category){
     // Need to create a function that takes each category, year, and quantiles and plots
@@ -245,8 +248,8 @@ function historicalBoxPlot(query,category){
     var infoPanelDiv = document.getElementById("info");
     var width = infoPanelDiv.clientWidth;
     var height = infoPanelDiv.clientHeight;
+
     chart2Width = width-30;
-    // chart2Height = (height-400)/2;
 
     var margin = {top: 10, right: 10, bottom: 20, left:32},
             width = chart2Width - margin.left - margin.right,
@@ -254,12 +257,15 @@ function historicalBoxPlot(query,category){
     
     // 1. Get all the data
     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) { 
+            ////////////////////////////////////////////
+            ////////////// Get the data ////////////////
+            ////////////////////////////////////////////
+
             dataReturned=data.rows;
-           
+            
             var result=formatData(dataReturned);
             var valsAll= result['valsAll'];
             var valsUse = result['valsUse'];
-            
             //////////////////////
             //// Initialize //////
             //////////////////////  
@@ -270,7 +276,8 @@ function historicalBoxPlot(query,category){
                     .attr("height", height + margin.top + margin.bottom)
                   .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
+            $(window).resize(d3.select(".historicalBoxPlot"));
+
             /// Initialize the scales
             var x = d3.scaleLinear().range([0, width]);
             var y = d3.scaleLinear().range([height, 0]);
@@ -279,7 +286,6 @@ function historicalBoxPlot(query,category){
             //////////////////////////
             /// Define chart domain //
             //////////////////////////
-            // Get the new features
             newFeatures = getFeatures()
             category=newFeatures[0]
             city = newFeatures[1]
@@ -338,7 +344,7 @@ function historicalBoxPlot(query,category){
                     data.push({'year':parseInt(k),'feat':v[category][1],'featLower':v[category][0],'featUpper':v[category][2]});
                 });
 
-                
+
                 
 
                 //// Draw the line
@@ -412,24 +418,27 @@ function historicalBoxPlot(query,category){
             })  
             
             $('#censusDropdown1').on('change',function(){
-                catNew=catDict1[$('#censusDropdown1 .text').text()];
-                city = $('#cityDropdown1 .text').text();
+                newFeatures = getFeatures()
+                category=newFeatures[0]
+                city = newFeatures[1]
+                year = newFeatures[2]
 
                 //////////////////////////////
                 ///// Reset the y axis ///////
                 //////////////////////////////
 
-                updateHistoricalBoxPlot(valsUse,catNew);
-                updateText2(city,catNew);
+                updateHistoricalBoxPlot(valsUse,category);
+                updateText2(city,category);
             })
 
             // $('.button.year').on('click',function(){
             $('#yearSlider>svg>g>.slider>.parameter-value>text').bind("DOMSubtreeModified",function(){
-    
+                newFeatures = getFeatures()
+                category=newFeatures[0]
+                city = newFeatures[1]
+                year = newFeatures[2]
                 
 
-                var year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
-                
                 var t = d3.transition().duration(dur);
 
                 svg.select('.yearHighlight>rect')
@@ -454,7 +463,6 @@ function historicalBoxPlot(query,category){
 
                 
                 query = getBoundsAllSQL(city);
-                catNew =catDict1[$('#censusDropdown1 .text').text()];
  
                 $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) {        
                         dataReturned=data.rows;
@@ -466,19 +474,21 @@ function historicalBoxPlot(query,category){
                         var svg= d3.select('.historicalBoxPlot>svg>g');
                         
                         
-                        updateHistoricalBoxPlot(valsUse,catNew);
-                        $('#censusDropdown1').on('change',function(){
-                            catNew=catDict1[$('#censusDropdown1 .text').text()];
-                            //////////////////////////////
-                            ///// Reset the y axis ///////
-                            //////////////////////////////
+                        updateHistoricalBoxPlot(valsUse,category);
+                        updateText2(city,category);
+                        // $('#censusDropdown1').on('change',function(){
+                        //     catNew=catDict1[$('#censusDropdown1 .text').text()];
+                        //     //////////////////////////////
+                        //     ///// Reset the y axis ///////
+                        //     //////////////////////////////
 
-                            updateHistoricalBoxPlot(valsUse,catNew);
-                            updateText2(city,catNew);
+                        //     updateHistoricalBoxPlot(valsUse,catNew);
+                        //     updateText2(city,catNew);
 
                         })
-                    })
                 })
+    
+
             // })
       
             ///////////////// 
@@ -491,14 +501,7 @@ function historicalBoxPlot(query,category){
                 var min =result1['min'] ;
                 var max =result1['max'] ;
                 var shortformFormat = getShortformFormat(category);
-                // var format = d3.format(".0%");
-                // if (max>20){
-                //     format = d3.format("$.02s")
-                // }
-                // else{
-                //     format =  d3.format(".0%");
-                // }
-                
+
 
                 
                 y.domain([min,max]).nice();
@@ -773,7 +776,6 @@ function fillMissingData(data,lenArray){
         }
     })
     return newdata
-    // console.log(data,newdata);
 }
 
 function getFeatures() {
@@ -795,7 +797,6 @@ function getFeatures() {
     if ($.inArray(category,censusList1)==-1){
         category=censusList1[0];
     }
-    // console.log(category,city,year);
    return [category,city,year]
 }
 
