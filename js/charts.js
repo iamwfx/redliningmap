@@ -33,6 +33,7 @@ function yearBoxPlot(query,category){
     //     var height = infoPanelDiv.clientHeight;
     // });
     chart1BoxWidth = width/4-10;
+    chart1Height = height/4
 
     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) {
 
@@ -250,7 +251,7 @@ function historicalBoxPlot(query,category){
     var height = infoPanelDiv.clientHeight;
 
     chart2Width = width-30;
-
+    chart1Height = height/4;
     var margin = {top: 10, right: 10, bottom: 20, left:32},
             width = chart2Width - margin.left - margin.right,
             height = chart2Height - margin.top - margin.bottom;           
