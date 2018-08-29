@@ -42,7 +42,7 @@
     <!-- City params -->
     <script  src="js/cities.js"></script>
     <!-- Custom Styling -->
-    <link rel="stylesheet" type="text/css" href="css/mainNew.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
   </head>
   <body >
     <div class="ui dimmerwrapper ">
@@ -50,13 +50,13 @@
         <div class="content ui  very padded  container  introSegment">
           
           <h1 class="ui header introHeader">The Legacy of Redlining</h1>
-          <p class="ui  introHeader">The US Home Owner's Loan Corportation (HOLC) "residential security" maps were created in the 1930s to map perceived lending risk in the city, as guide when providing government-guaranteed home mortgages. The neighborhoods with higher risk were often black and other minority neighborhoods.
+          <p class="ui  introHeader">The US Home Owner's Loan Corportation (HOLC) "residential security" maps were created in the 1930s to map perceived lending risk in the city. The neighborhoods with higher risk were often black and other minority neighborhoods. Because minority homeownership was considered to threaten property values, these maps had the intention of maintain racial homogeneity. 
           </p>
           <br>
-          <p class="ui  introHeader">The homeowners in high risk regions were denied Depression-era mortgage bailouts. Many also believe these maps were used in "redlining" - the widespread practice of illegally denying home loans based on race. 
+          <p class="ui  introHeader">The homeowners in class D ("high risk") areas were denied Depression-era mortgage bailouts. Many also believe these maps were used in "redlining" - the widespread practice of illegally denying home loans based on race - and helped to institutionalize the practice. 
           </p> 
           <br>
-          <p class="ui  introHeader">The aim of this resource is to map the relationship between HOLC credit zones and socioeconomic indicators in the more than 80 years since the maps were created. </p> 
+          <p class="ui  introHeader">Home ownership tends to have long-term effects. The aim of this resource is to map the relationship between neighborhoods categorized by the HOLC in the 1930s and 1940s and socioeconomic indicators on how they have have developed since.</p> 
 
           <p class="ui  introHeader">This site currently only works in Chrome. Safari and Firefox coming soon.</p>
           
@@ -87,6 +87,9 @@
               <div class="item compact infoIcon" data-value="info">
                 About 
                 </div>
+              <div class="item compact dataIcon" data-value="info">
+                Data 
+              </div>
               
       
               <div class="ui divider"></div>
@@ -110,6 +113,7 @@
                       <i class="large square icon classD"></i>Grade D: Hazardous
                     </div>
                   </ul>
+                  <font size="1px">Source: NHGIS Decennial census and ACS </font>
                 </div>
                 <br>
                 <div class='left aligned content censusLegend'>
@@ -117,8 +121,8 @@
                   <!-- <i class="fa fa-info-circle "></i> -->
                   Census Category
                   </h5>
-
                 </div>
+               <font size="1px">Source: HOLC Residential Security Maps from Digital Scholarship Lab</font>
               </div>
               
           </div>
@@ -126,8 +130,9 @@
       </div>
       </div>
       <!-- Widget Panel -->
-      <div id ='info'>
-        
+      <!-- <div id ='info'> -->
+      <div  id ='info' ">
+ 
         <h5> City</h5>
         <div id = "cityDropdown1" class="ui fluid search selection dropdown">
           <input type="hidden" name="year">
@@ -160,18 +165,25 @@
       <div class="ui message floating transition hidden infoSegment" id='infoMessage'>
         <i class="large close red icon"></i>
         <h5>History of the HOLC "Redlining" Maps</h5>
-        <p ">The Home Owner's Loan Corportation (HOLC) was a New Deal era agency that helped to establish a government-back mortgage market in the United States. The HOLC created credit worthiness maps that acted as a guide to establish risk by neighborhood. Since risk is based on property values as well as individual credit worthiness, the agency relied on local banks and realtors in 239 cities to appraise neighborhoods based on economic conditions, categorizing them into "Best", "Still Desirable", "Definitely Declining", and "Hazardous".</p>
-        <p>These appraisers often used criteria such as housing conditions, transportation access, distance to amenities and disamentiies, the economic class and status of the neighborhood's residents, and their ethnic and racial composition. (<a href='https://ncrc.org/holc/' target="_blank">NRSC, 2018</a>) The presence of minority (mostly black at the time) homeowners was considered to devalue both the property the neighborhoods; therefore, local appraisers also had an incentive to reinforce racial biases.</p>
-        <p>Many consider the creation of these "residential security maps" to have faciliated residential <a href='https://en.wikipedia.org/wiki/Redlining' target="_blank">redlining</a> - the widespread practice of illegally denying home loans (and the opportunity to build wealth) based on race. The influence of these maps is debated: some argue that these maps directly bolstered governmental redlining (<a href='https://books.google.com/books/about/Crabgrass_Frontier.html?id=XDQC1w1LIFMC' target="_blank">Jackson, 1987</a>, <a href='http://www.hup.harvard.edu/catalog.php?isbn=9780674018211' target="_blank">Massey and Denton, 1993</a>), others have argued these maps were made after 1936, when most of the HOLC bailout loans were provided (<a href='https://repository.upenn.edu/cgi/viewcontent.cgi?article=1008&context=cplan_papers' target="_blank">Hillier, 2003a</a>, <a href='http://journals.sagepub.com/doi/abs/10.1177/0096144203029004002' target="_blank">Hillier, 2003b</a>). However, it is undeniable that there was institutional discrimination against black and other minority neighborhoods. These maps still reflect the perceived lending risk held by banks and other real estate actors.</p>
+        <p ">The Home Owner's Loan Corportation (HOLC) was a New Deal era agency that helped to provided emergency bailouts to banks and homeowners during the 1930s mortgage crisis that resulted from the Great Depression. The HOLC created credit worthiness maps for local banks and the Federal Housing Administration that indicated the lending risk by neighborhood. Since risk is based on property values as well as individual credit worthiness, the agency relied on local banks and realtors in 239 cities to appraise neighborhoods based on economic conditions, categorizing them into "Best", "Still Desirable", "Definitely Declining", and "Hazardous".</p>
+        <p>Guidelines for lenders are: 
+          <ul>
+            <li>"The <b>First grade of A areas</b> are 'hot spots'; they are not fully built up." In demand during good times and bad.</li>
+            <li>"The <b>Second grade or B areas</b>, as a rule, are completely developed."</li>
+            <li>"The <b>Third grade or C areas</b> are characterized by age, obsolescence, and change of style; expiriing restrictions or lack of them; infiltration of a lower grade population."</li>
+            <li>"The <b>fourth grade or D areas</b>...are characterized by detrimental infuences in a pronounced degree, undesirable population or an infiltration of it...Some mortgage lenders may refuse to make loans in these neighborhoods and others will lend only on a convervative basis."</li>
+          </ul>(FHLBB Division of Reearch and Statistics, 1937)</p>
+        <p>These appraisers often used criteria such as housing conditions, transportation access, distance to amenities and disamentiies, the economic class and status of the neighborhood's residents, and their ethnic and racial composition. (<a href='https://ncrc.org/holc/' target="_blank">NRSC, 2018</a>) The presence of minority (mostly black at the time) homeowners was considered to devalue both the property the neighborhoods; therefore, local appraisers also had an incentive to reinforce racial homogeneity.</p>
+        <p>Many consider the creation of these "residential security maps" to have faciliated residential <a href='https://en.wikipedia.org/wiki/Redlining' target="_blank">redlining</a> - the widespread practice of illegally denying home loans (and the opportunity to build wealth) based on race. The influence of these maps is debated: some argue that these maps directly bolstered governmental redlining (<a href='https://books.google.com/books/about/Crabgrass_Frontier.html?id=XDQC1w1LIFMC' target="_blank">Jackson, 1987</a>, <a href='http://www.hup.harvard.edu/catalog.php?isbn=9780674018211' target="_blank">Massey and Denton, 1993</a>), others have argued these maps were made after 1936, when most of the HOLC bailout loans were provided (<a href='https://repository.upenn.edu/cgi/viewcontent.cgi?article=1008&context=cplan_papers' target="_blank">Hillier, 2003a</a>, <a href='http://journals.sagepub.com/doi/abs/10.1177/0096144203029004002' target="_blank">Hillier, 2003b</a>). However, it is undeniable that there was (and <a href='https://www.revealnews.org/article/for-people-of-color-banks-are-shutting-the-door-to-homeownership/' target='_blank'>continues to be</a>) institutional discrimination against minority borrowers. These maps still reflect the perceived lending risk held by banks and other real estate actors.</p>
         <p>The <a href='https://www.gpo.gov/fdsys/pkg/STATUTE-82/pdf/STATUTE-82-Pg73.pdf' target="_blank">1968 Fair Housing Act</a> made housing discriminination based on "race, color, religion, or national origin" a federal crime. By this point, however, the spatial structure of neighborhood segregation had already been established.</p>
 
-        <p>This map aims to show that the impact of discriminatory housing practices on the landscape American cities and its socioeconomic welfare residents is still seen today. Many of those neighborhoods deemed "Hazardous" or "Definitely Declining" were and remain minority areas with lower levels of income, education, and employment that their counterparts with higher HOLC grades. </p>
+        <p>This map aims to show that the impact of discriminatory housing practices on the landscape of American cities and on the welfare of its residents is still seen today. Many of those neighborhoods deemed "Hazardous" or "Definitely Declining" were and remain minority areas with lower levels of income, education, and employment that their counterparts with higher HOLC grades. </p>
 
         <h5>Data</h5>
-        <p>This map relies heavily on work done by the <a href='https://dsl.richmond.edu/' target="_blank">Digital Scholarship Lab</a>, who geo-referenced the original HOLC maps as well as produced the shapefiles. They have an <a href='https://dsl.richmond.edu/panorama/renewal/#view=0/0/1&viz=cartogram' target="_blank"> interactive feature</a> of all the HOLC maps. They also have a <a href='https://dsl.richmond.edu/panorama/redlining/#loc=4/36.71/-96.93&opacity=0.8' target="_blank">project</a> mapping the impact urban displacement due to "slum" clearance (a.k.a urban renewal) projects during the mid-20th century.</p>
+        <p>This map relies heavily on work done by the <a href='https://dsl.richmond.edu/' target="_blank">Digital Scholarship Lab</a>, who geo-referenced the original HOLC maps as well as produced the shapefiles. They have a great <a href='https://dsl.richmond.edu/panorama/renewal/#view=0/0/1&viz=cartogram' target="_blank"> interactive feature</a> of all the HOLC maps. They also have a <a href='https://dsl.richmond.edu/panorama/redlining/#loc=4/36.71/-96.93&opacity=0.8' target="_blank">project</a> mapping the impact urban displacement due to "slum" clearance (a.k.a urban renewal) projects during the mid-20th century.</p>
 
 
-        <p>The historical census data comes the IPUMS <a href='https://www.nhgis.org/' target="_blank">National Historical Geographic Information System</a> (NHGIS), University of Minnesota. Because census areas, categories, and collection methods changed every decennial census, comparison between decades is not straightforward. Here are some notes about the Census data used: 
+        <p>The historical decennial census and American Community Survey data comes from IPUMS's<a href='https://www.nhgis.org/' target="_blank">National Historical Geographic Information System</a> (NHGIS) at the University of Minnesota. Because census areas, categories, and collection methods changed every decennial census, comparison between decades is not straightforward. Here are some notes about the Census data used: 
         </p>
         <ul>
           <li>
@@ -183,20 +195,20 @@
           <li>
            Income information is not available until 1950.
           </li>
-          <li>Unemployment information is not available until 1970.</li> 
           <li>
-            Only starting in the 1960 census was Hispanic origin information collected. The census considers Hispanic origin not be a race but a "heritage, nationality, lineage, or country of birth".
+            Only starting in the 1960 census was Hispanic origin information collected. The census considers Hispanic origin not be a race but a "heritage, nationality, lineage, or country of birth". But only starting in 1990 did the Census start to separate the race groups by Hispanic and non-Hispanic (for ex: Hispanic asian and non-Hispanic asian). Starting in the 1990s, I use non-hispanic populations for White, Black, Asian, Native American, Pacific Islander, and other races. 
           </li>
+          <li>Unemployment information is not available until 1970.</li> 
           <li>
             Until the 1970 census, the only required races were "White","Black", and "Other non-white".
           </li>
           <li>
-            Until the 1980 census, median household income information only exists in ranges. We take the midpoint of each range as the representative income. 
+            In 1960 and 1970s, median household income information only exists in ranges. I've created a random uniform sample of each income range based on the number of households in each range to estmate the median income value.
           </li>
           <li>
            All median household incomes have been inflation-adjusted from levels on the year before the census year, as this is the year the information was actually collected, to 2016 levels. For instance, the 1960 census has incomes adjusted from 1959 to 2016. 
           </li>
-          <li>Staring in 2010, we use the American Community Survey - a monthly rolling survey published annuall - as the longform census (containing additional questions such as education and income) was replaced by the ACS.</li>
+          <li>Staring in 2010, I use the American Community Survey - a monthly rolling survey published annuall - as the longform census (containing additional questions such as education and income) was replaced by the ACS.</li>
           <li>The 2010 data uses the 2008-2012 5-year American Community Survey as an unbiased estimate of 2010 statistics.</li>
           <li>The 2016 data uses the 2016 1-year American Community Survey.</li>
         </ul>
@@ -205,12 +217,11 @@
 
         <h5>Method</h5>
 
-        <p>Each HOLC zone is created through a weighted average of census data for each year, where the weight is the percentage overlap for each tract within the zone. As census units change size, each year's census needs to be calculated separately. Until 1980, we use the smallest geographic unit available, which is the census tract. Starting in 1990, we use census block groups. Following <a href='https://www.chicagofed.org/publications/working-papers/2017/wp2017-12' target="_blank">Aaronson, Hartley, and Mazumder (2017) </a>, census calculations for each zone exclude all tracts that have 15% or less of its area and all block groups that have 25% or less of its area in an HOLC zone.
-        </p>
+        <p>The census data for HOLC zone is created through a population-weighted average of census data for each year, where the population is assumed to be proportional to the percentage overlap of the tract or block group with the HOLC zone. (This assumes that people are distributed uniformly across each census area, which of course, is not true.) As census units change size, each year's census needs to be calculated separately. Until 1980, I use the smallest geographic unit available, which is the census tract. Starting in 1990, I use census block groups.</p>
 
         <h5>Get in touch</h5>
 
-        <p>This project was created by <a href='https://wenfeixu.com' target = "_blank">Wenfei Xu</a>. I am a phd student in urban planning at Columbia GSAAP and a spatial data scientist at CARTO. You can email me at xu.wenfei[at]gmail.com. 
+        <p>This project was created by <a href='https://wenfeixu.com' target = "_blank">Wenfei Xu</a>. I am a phd student in urban planning at Columbia GSAAP and a spatial data scientist at CARTO. 
         </p>
         <p>
           <button class="ui circular mini icon button" style="background-color:#ff3700">
@@ -226,6 +237,28 @@
             <a href= "https://www.instagram.com/therealwfx/?hl=en" target = "_blank"><i class="instagram icon" style="margin-right: 0px;color:white"></i></a>
           </button>
         </p>
+      </div>
+
+      <div class="ui message floating transition hidden infoSegment" id='dataMessage'>
+        <i class="large close red icon"></i>
+        <<h5>Original HOLC Zones</h5>
+        <ul>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_zones.zip' download><b>Original HOLC Zones</b></a></li>
+        </ul>
+        <h5>HOLC Zones joined to Census Data</h5>
+        <ul>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_1930.zip' download><b>1930</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_1940.zip' download><b>1940</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_1950.zip' download><b>1950</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_1960.zip' download><b>1960</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_1970.zip' download><b>1970</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_1980.zip' download><b>1980</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_1990.zip' download><b>1990</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_2000.zip' download><b>2000</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_2010.zip' download><b>2010</b></a></li>
+          <li><a href='https://s3.amazonaws.com/redlining/holc_overlay_2016.zip' download><b>2016</b></a></li>
+        </ul>
+
       </div>
 
 

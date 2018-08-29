@@ -1,8 +1,15 @@
+// Set the map to width to change on window resize
+window.addEventListener("resize", function(){
+	var w = window.innerWidth;
+	$('#left').css("cssText", `width: ${w-380-15}px !important;`);
+	$('#right').css("cssText", `width: ${w-380-15}px !important;`);
+})
+
 //Globals
 const catDict ={'white_perc':'% White',
             'colored_perc':"% Black",
             'hispanic_perc':"% Hispanic",
-            'other_perc':"% Other races",
+            'other_perc':"% Asian, Native American, Pacific Islander and 'other' or multiple races",
             'population':"Population",
             'population_density':"Population density (ppl/sq-km)",
             'unemployed_perc':'% Unemployment',
@@ -11,22 +18,27 @@ const catDict ={'white_perc':'% White',
 const catDict1 ={'% White':'white_perc',
             "% Black":'colored_perc',
             "% Hispanic":'hispanic_perc',
-            "% Other races":'other_perc',
+            "% Asian, Native American, Pacific Islander and 'other' or multiple races":'other_perc',
             "Population":'population',
+            '% Unemployment':"unemployed_perc",
             "Population density (ppl/sq-km)":'population_density',
-            '% Unemployment':'unemployed_perc',
-            "Median household income (adj. 2016)":'median_income_adj',
+			"Median household income (adj. 2016)":'median_income_adj',
             '% Higher education':'college_perc'}
+// const legendCatDesc= {'white_perc':`Quantiles of the median percentage of White race (including Hispanic, where applicable) as defined by each year's census`,
+//             'colored_perc':`Quantiles of the median percentage of White race (including Hispanic, where applicable) as defined by each year's census`,
+//             'hispanic_perc':"% Hispanic",
+//             'other_perc':"% Other races",
+//             'population':"Population",
+//             'population_density':"Population density (ppl/sq-km)",
+//             'unemployed_perc':'% Unemployment',
+//             'median_income_adj':"Median household income (adj. 2016)",
+//             'college_perc':'% Higher education'}
 
 function getBoundsSQL(city,year){
-
-	// sql = `select a.* from holc_overlay_2016 as a where a.the_geom &&  ST_MakeEnvelope( ${sqlBounds['lng_min']},${sqlBounds['lat_min']},${sqlBounds['lng_max']},${sqlBounds['lat_max']}, 4326)`
-	// sql = "select  * from holc_overlay_"+year+" as a, (select st_envelope(the_geom) as envelope from holc_overlay_"+year+" where city='"+city+"') as b  where  st_intersects(a.the_geom,b.envelope)"
 	sql = `select  * from holc_overlay_${year} where city='${city}'`
 	return sql
 }
 function getBoundsAllSQL(city){
-	// sql = "select  * from holc_overlay_all as a, (select st_envelope(the_geom) as envelope from holc_overlay_"+year+" where city='"+city+"') as b  where st_intersects(a.the_geom,b.envelope)"
 	sql = `select  * from holc_overlay_all where city ='${city}' `
 	return sql
 }
@@ -43,8 +55,6 @@ $('.introButton').on('click',function(){
  	
 });
 
-// setTimeout(location.reload.bind(location), 60000);
-
 
 $(document).ready(function() {
 /////////////////////////////
@@ -60,6 +70,9 @@ $('.infoIcon').on('click',function(){
 	$('#infoMessage').transition('fade in');
 })
 
+$('.dataIcon').on('click',function(){
+	$('#dataMessage').transition('fade in');
+})
 $('.message .close')
   .on('click', function() {
     $(this)
@@ -155,31 +168,9 @@ const holc_tiles = {1930:'holc_overlay_1930',
 				2016:'holc_overlay_2016'
 	}
 
-// const holc_classes =['A','B','C','D']
-// const holc_colors = ['#5fce23', '#0bc0ed', '#ffd419', '#ff4b19']
-
 const holc_colors_dict = {'A':'5fce23','B':'0bc0ed','C':'ffd419','D':'ff4b19'}
 const s = carto.expressions;
 
-
-// const catDict ={'white_perc':'% White',
-//             'colored_perc':"% Black",
-//             'hispanic_perc':"% Hispanic",
-//             'other_perc':"% Other races",
-//             'population':"Population",
-//             'population_density':"Population density (ppl/sq-km)",
-//             'unemployed_perc':'% Unemployment',
-//             'median_income_adj':"Median household income (adj. 2016)",
-//             'college_perc':'% Higher education'}
-// const catDict1 ={'% White':'white_perc',
-//             "% Black":'colored_perc',
-//             "% Hispanic":'hispanic_perc',
-//             "% Other races":'other_perc',
-//             "Population":'population',
-//             "Population density (ppl/sq-km)":'population_density',
-//             '% Unemployment':'unemployed_perc',
-//             "Median household income (adj. 2016)":'median_income_adj',
-//             '% Higher education':'college_perc'}
 
 /// Definite the initial category parameters
 var year = '2016';
@@ -207,7 +198,7 @@ $cityDropdown.append($('<div class="item" data-value="'+this+'">'+this+'</div>')
 var $censusDropdown = $("#censusDropdown");
 $('#censusDropdown1').dropdown();
 var censusList1 = censusFeatures[parseInt(year)];
-// var censusList1 = ['population_density','white_perc','colored_perc','hispanic_perc','other_perc','unemployed_perc','college_perc','median_income_adj'];
+
 $censusDropdown.empty();
 $.each(censusList1, function(k,v) {
 	$censusDropdown.append($('<div class="item" data-value="'+v+'">'+catDict[v]+'</div>'))
@@ -390,16 +381,6 @@ mapRedline.on('load', (ev) => {
 		$("#undim").removeClass("loading disabled"));
 });
 
-// window.addEventListener("resize", function(){
-//     // Get the new features
-//     newFeatures = getFeatures()
-//     category=newFeatures[0]
-//     city = newFeatures[1]
-//     year = newFeatures[2]
-//     historicalBoxPlot(getBoundsAllSQL(city),category)
-//     yearBoxPlot(getBoundsSQL(city,year),category)});
-
-
 /////////////////////////////////
 ////// Add in the Legend ////////
 /////////////////////////////////
@@ -431,10 +412,6 @@ $('#yearSlider>svg>g>.slider>.parameter-value>text').bind('DOMSubtreeModified',f
   	$censusDropdown.empty();
 	$.each(censusList1, function(k,v) {
 	$censusDropdown.append($('<div class="item" data-value="'+v+'">'+catDict[v]+'</div>'))})
-	
-
-	
-
 
 	// If the current city isn't in the new list, then default to the first on the list
 	if ($.inArray(city,cityList)==-1){
@@ -461,8 +438,6 @@ $('#yearSlider>svg>g>.slider>.parameter-value>text').bind('DOMSubtreeModified',f
 	})
   	;
   	updateCensusMap(city,category,year,holcOverlayLayerCensus,holcOverlaySource)
-  	
-  	// holcOverlayLayerCensus.update(holcOverlaySource, holcOverlayLayerCensus.getViz());
 
   	
 	updateLegend(city,category,year,mapCensus,bbox)
@@ -476,16 +451,12 @@ $('#cityDropdown1').on('change',function(){
 		console.log('city changed2');
 		/// Establish the parameters
 		// Get the new features
-                newFeatures = getFeatures();
-                category=newFeatures[0]
-                city = newFeatures[1]
-                year = newFeatures[2]
+        newFeatures = getFeatures();
+        category=newFeatures[0]
+        city = newFeatures[1]
+        year = newFeatures[2]
 
-		// city =val;
-		// year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
-		// category = catDict1[$('#censusDropdown1 .text').text()];
-
-		 holcOverlaySource =new carto.source.SQL(`
+		holcOverlaySource =new carto.source.SQL(`
 	  		select * from holc_overlay_${year}
 	  		where city = '${city}'
 	  		`,
@@ -506,22 +477,21 @@ $('#cityDropdown1').on('change',function(){
 // Change layer on cat change ///
 /////////////////////////////////
 
-$('#censusDropdown1').dropdown({
-	onChange:function(val){ 
+$('#censusDropdown1').on('change',function(){
 
 		/// Establish the parameters
-		category = val;
-		city = $('#cityDropdown1 .text').text();
-		year = $('#yearSlider>svg>g>.slider>.parameter-value>text').text();
+		newFeatures = getFeatures();
+        category=newFeatures[0]
+        city = newFeatures[1]
+        year = newFeatures[2]
 
-		
 		// Update Categeory map
 		updateCensusMap(city,category,year,holcOverlayLayerCensus,holcOverlaySource);
 		//Update legend
 		updateLegend(city,category,year,mapCensus,bbox);
 
 	}
-})
+)
 
 
 
@@ -599,7 +569,7 @@ function popUp(interactivity,popUp,map,outlineColor){
 		
 		/// Display the baseline the numbers (Population, population density, white, and black races)
 	    popUpStr = ` <div>
-	      <h4>${vars.city.value}: Grade ${vars.holc_grade.value}</h4>
+	      <h4>${year} ${vars.city.value}: Grade ${vars.holc_grade.value}</h4>
 	      <p id="description">Population: ${numberWithCommas(parseInt(vars.population.value))}
 	      <p id="description">Population density (people per sq. km.): ${numberWithCommas(parseInt(vars.population_density.value))}
 	      <br>
@@ -611,13 +581,13 @@ function popUp(interactivity,popUp,map,outlineColor){
 	    /// If there are other feature available, add them in
 	    if (censusList1_amend.length!=0){
 	    	popUpDict ={
-				'other_perc':`Other:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
+				'other_perc':`Asian, Pacific Islander and multiple:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
 				'college_perc':`Higher Education:  ${d3.format(",.2%")(vars.college_perc.value)} <br>`,
 				'median_income_adj':`Median income (adj 2016):  ${d3.format("$,.0f")(parseInt(vars.median_income_adj.value))} <br>`,
 				}
 	    	if (censusList1_amend.length==4){
 	    		popUpDict ={
-				'other_perc':`Other:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
+				'other_perc':`Asian, Pacific Islander and multiple:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
 				'college_perc':`Higher Education:  ${d3.format(",.2%")(vars.college_perc.value)} <br>`,
 				'median_income_adj':`Median income (adj 2016):  ${d3.format("$,.0f")(parseInt(vars.median_income_adj.value))} <br>`,
 				'hispanic_perc':`Hispanic: ${d3.format(",.2%")(vars.hispanic_perc.value)} <br>`
@@ -625,7 +595,7 @@ function popUp(interactivity,popUp,map,outlineColor){
 	    	}
 	    	else if (censusList1_amend.length==5){
 	    		popUpDict ={
-				'other_perc':`Other:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
+				'other_perc':`Asian, Pacific Islander and multiple:  ${d3.format(",.2%")(vars.other_perc.value)} <br>`,
 				'college_perc':`Higher Education:  ${d3.format(",.2%")(vars.college_perc.value)} <br>`,
 				'median_income_adj':`Median income (adj 2016):  ${d3.format("$,.0f")(parseInt(vars.median_income_adj.value))} <br>`,
 				'hispanic_perc':`Hispanic: ${d3.format(",.2%")(vars.hispanic_perc.value)} <br>`,
@@ -653,9 +623,7 @@ function popUp(interactivity,popUp,map,outlineColor){
 	  }
 	})
 }
-// function updateCategoryp(city,category,year,overlay,overlaySource){
 
-// }
 function updateCensusMap(city,category,year,overlay,overlaySource){
 
 	///Whenever the category changes, we need to update the following: 
@@ -726,11 +694,7 @@ function updateCensusMap(city,category,year,overlay,overlaySource){
 
 	    /// change map to new city and then update the legend
 	    mapCensus.fitBounds(bbox,{linear:true, padding:20});
-	    // updateCategory(city,category,year,holcOverlayLayerCensus,holcOverlaySource);
 	    updateLegend(city,category,year,mapCensus,bbox)
-	 // $.when(mapCensus.fitBounds(bbox,{linear:true, padding:20})).then(
-	 // 	updateLegend(city,category,year,mapCensus,bbox));
-
 
 
 	});
@@ -759,14 +723,14 @@ function updateLegend(city,category,year,mapCensus,bbox){
 
     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+quantileQuery, function(data) {
     	$('.censusLegend').empty();
-	 	$('.censusLegend').append($('<h5 class="header smallHeader ">'+city+' '+catDict[category].replace(/\b\w/g, l => l.toUpperCase())+'</h5><div class="legendBar"></div>'));
+	 	$('.censusLegend').append($(`<h5 class="header smallHeader ">${city} ${catDict[category].replace(/\b\w/g, l => l.toUpperCase())}</h5><div class="legendBar"</div>`));
 	 	
 	 	var x = d3.scaleLinear().range([0, 100]);
 	 	const barWidth = parseInt(220/censusCatDict[category].length);
 
 	 	const svg = d3.select(".legendBar").append("svg")
                 .attr("width", 250)
-                .attr("height",60)
+                .attr("height",40)
         const g = svg.append("g")
                 .attr("transform", "translate(15,0)");
         

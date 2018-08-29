@@ -13,11 +13,23 @@ const dur = 1500;
 ///////////////////////////////////////
 const whiskerLen = 1;
 const boxMargin = 2;
-var chart1BoxWidth = 120;
-var chart1Height = 140;
+
+var infoPanelDiv = document.getElementById("info");
+var infoPanelDivWidth = infoPanelDiv.clientWidth;
+var infoPanelDivHeight = infoPanelDiv.clientHeight;
+
+var chart1BoxWidth = 85;
+var chart1Height = infoPanelDivHeight/5.5;
+
 
 var chart2Width = 360;
-var chart2Height = 200;
+var chart2Height = infoPanelDivHeight/4;
+
+// var chart1BoxWidth = 120;
+// var chart1Height = 100;
+
+// var chart2Width = 360;
+// var chart2Height = 200;
 
 var t = d3.transition().duration(dur);
 
@@ -25,15 +37,13 @@ var category,city,year
 function yearBoxPlot(query,category){     
 
 
-    var infoPanelDiv = document.getElementById("info");
-    var width = infoPanelDiv.clientWidth;
-    var height = infoPanelDiv.clientHeight;
-    // $( window ).resize(function() {
-    //   var width = infoPanelDiv.clientWidth;
-    //     var height = infoPanelDiv.clientHeight;
-    // });
-    chart1BoxWidth = width/4-10;
-    chart1Height = height/4
+    infoPanelDiv = document.getElementById("info");
+    infoPanelDivWidth = infoPanelDiv.clientWidth;
+    infoPanelDivHeight = infoPanelDiv.clientHeight;
+    
+    // chart1BoxWidth = infoPanelDivWidth/4-10;
+    chart1Height = infoPanelDivHeight/5;
+    console.log(chart1Height);
 
     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) {
 
@@ -50,12 +60,8 @@ function yearBoxPlot(query,category){
 
             var dataReturned=data.rows;
             var allCols = Object.keys(dataReturned[0]);
-            // var holcCols = $.map(dataReturned,function(val,key){
-            //     return val['holc_grade_y']
-            // });
 
             var allColsKeep = allCols
-            // .slice(9,allCols.length);
             
             var vals_A={}, vals_B={}, vals_C={}, vals_D={};
             var data_dict = {'A':{},'B':{},'C':{},"D":{}}
@@ -84,7 +90,8 @@ function yearBoxPlot(query,category){
             var margin = {top: 10, right: 33, bottom: 10, left: 33},
             width = chart1BoxWidth  - margin.left - margin.right,
             height = chart1Height - margin.top - margin.bottom;
-
+            console.log(chart1Height);
+            console.log(height);
             var boxPlotFormat;
             shortformFormat = getShortformFormat(category);
 
@@ -124,26 +131,6 @@ function yearBoxPlot(query,category){
             ///CHECK THIS
             updateText1(city,category,year,dataNew);
 
-
-            //  /// When the census category is changed, also update the chart
-            // $('#censusDropdown1').on('change',function(){
-                    
-            //         var t = d3.transition().duration(dur);
-
-
-            //         // Get the new features
-            //         newFeatures = getFeatures()
-            //         category=newFeatures[0]
-            //         city = newFeatures[1]
-            //         year = newFeatures[2]
-                    
-            //         dataNew= fillMissingData([data_dict['A'][category],data_dict['B'][category],data_dict['C'][category],data_dict['D'][category]],1);
-                            
-            //         //CHECK THIS        
-            //         updateBoxPlot(dataNew,category);
-            //         updateText1(city,category,year,dataNew);
-                
-            // })
             $('#censusDropdown1').dropdown({
                 onChange:function(val){ 
                 updateBoxPlotAll()
@@ -192,8 +179,7 @@ function yearBoxPlot(query,category){
                 query = getBoundsSQL(city,year);
 
                     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) {
-                        // var vals_A={}, vals_B={}, vals_C={}, vals_D={};
-
+                        
                         dataReturned=data.rows;
                         var allCols = Object.keys(dataReturned[0]);
                         var allColsKeep = allCols;
@@ -214,7 +200,7 @@ function yearBoxPlot(query,category){
                         
                         //// Fill missing data
                         dataNew= fillMissingData([data_dict['A'][category],data_dict['B'][category],data_dict['C'][category],data_dict['D'][category]],1);
-                                                /// For each cateogry, get the min and max                        
+                        /// For each cateogry, get the min and max                        
                         $.each(dataNew,function(i,v){
                         if(v==null){
                             
@@ -229,7 +215,7 @@ function yearBoxPlot(query,category){
                             }
                         });
                         
-                        
+
                         updateBoxPlot(dataNew,category);
                         /// CHECK THIS
                         updateText1(city,category, year,dataNew);
@@ -256,6 +242,7 @@ function historicalBoxPlot(query,category){
             width = chart2Width - margin.left - margin.right,
             height = chart2Height - margin.top - margin.bottom;           
     
+    var valsUse
     // 1. Get all the data
     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) { 
             ////////////////////////////////////////////
@@ -264,9 +251,9 @@ function historicalBoxPlot(query,category){
 
             dataReturned=data.rows;
             
-            var result=formatData(dataReturned);
-            var valsAll= result['valsAll'];
-            var valsUse = result['valsUse'];
+            // var result=formatData(dataReturned);
+            // var valsAll= result['valsAll'];
+            valsUse = formatData(dataReturned)['valsUse'];
             //////////////////////
             //// Initialize //////
             //////////////////////  
@@ -295,7 +282,6 @@ function historicalBoxPlot(query,category){
 
             updateText2(city,category);
 
-
             var result1 = calcMinMax(valsUse,category);
             var min =result1['min'] ;
             var max =result1['max'] ;
@@ -312,7 +298,6 @@ function historicalBoxPlot(query,category){
                         .tickFormat(d3.format("d")));
             
             // Add the Y Axis
-            // var format = d3.format(".0%");
             var format = getShortformFormat(category);
 
             svg.append("g")
@@ -344,9 +329,6 @@ function historicalBoxPlot(query,category){
                 $.each(gradeGrp,function(k,v){
                     data.push({'year':parseInt(k),'feat':v[category][1],'featLower':v[category][0],'featUpper':v[category][2]});
                 });
-
-
-                
 
                 //// Draw the line
                 svg.append('g')
@@ -423,7 +405,7 @@ function historicalBoxPlot(query,category){
                 category=newFeatures[0]
                 city = newFeatures[1]
                 year = newFeatures[2]
-
+                
                 //////////////////////////////
                 ///// Reset the y axis ///////
                 //////////////////////////////
@@ -439,9 +421,6 @@ function historicalBoxPlot(query,category){
                 city = newFeatures[1]
                 year = newFeatures[2]
                 
-
-                var t = d3.transition().duration(dur);
-
                 svg.select('.yearHighlight>rect')
                     .transition(t)
                     .attr("x",x(year-2))
@@ -462,35 +441,18 @@ function historicalBoxPlot(query,category){
                 city = newFeatures[1]
                 year = newFeatures[2]
 
-                
                 query = getBoundsAllSQL(city);
  
                 $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) {        
                         dataReturned=data.rows;
-                        var result=formatData(dataReturned);
-                        var valsAll= result['valsAll'];
-                        var valsUse = result['valsUse'];
-                        var t = d3.transition().duration(dur);
-                        
-                        var svg= d3.select('.historicalBoxPlot>svg>g');
-                        
-                        
+      
+                        valsUse = formatData(dataReturned)['valsUse'];
                         updateHistoricalBoxPlot(valsUse,category);
                         updateText2(city,category);
-                        // $('#censusDropdown1').on('change',function(){
-                        //     catNew=catDict1[$('#censusDropdown1 .text').text()];
-                        //     //////////////////////////////
-                        //     ///// Reset the y axis ///////
-                        //     //////////////////////////////
-
-                        //     updateHistoricalBoxPlot(valsUse,catNew);
-                        //     updateText2(city,catNew);
-
+      
                         })
                 })
     
-
-            // })
       
             ///////////////// 
             /// Functions ///
@@ -502,7 +464,6 @@ function historicalBoxPlot(query,category){
                 var min =result1['min'] ;
                 var max =result1['max'] ;
                 var shortformFormat = getShortformFormat(category);
-
 
                 
                 y.domain([min,max]).nice();
@@ -563,20 +524,14 @@ function historicalBoxPlot(query,category){
                 const holcGrades = ['A','B','C','D'];
                 const years = [1930,1940,1950,1960,1970,1980,1990,2000,2010,2016];
                 const allColsKeep = ['population','population_density','white_perc','colored_perc','hispanic_perc','other_perc','unemployed_perc','college_perc','median_income_adj'];
-                // allColsKeep = censusFeatures[parseInt(year)];
-                
-                
-
-                var valsAll={'A':{},'B':{},'C':{},'D':{}};
+               
                 var valsUse={'A':{},'B':{},'C':{},'D':{}};
                 /// For each grade 
                 $.each(holcGrades,function(l,grade){
-                    valsAll[grade]={};
                     valsUse[grade]={};
 
                     /// For each year
                     $.each(years,function(j,yr){
-                        valsAll[grade][yr]={};
                         valsUse[grade][yr]={};
 
                             /// Filter for the year and grade that we want
@@ -589,13 +544,6 @@ function historicalBoxPlot(query,category){
                             /// Filter for the categories we want
                             dictSnippet = allColsKeep.map(function(key){ 
 
-                                /// For all the rows 
-                                valsAll[grade][yr][key]=dictSnippet.map(function(val){
-                                    ///// Returns all the values for that key
-                                    return val[key]
-                                    })
-
-
                                 /// Get standard dev
                                 valsUse[grade][yr][key] = Quartiles2(
                                     dictSnippet.map(function(val){
@@ -606,7 +554,7 @@ function historicalBoxPlot(query,category){
                                    
                     })
                 })
-                return {'valsAll':valsAll, 'valsUse':valsUse}
+                return {'valsUse':valsUse}
             }
             
             
