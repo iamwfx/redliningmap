@@ -19,11 +19,12 @@ var infoPanelDivWidth = infoPanelDiv.clientWidth;
 var infoPanelDivHeight = infoPanelDiv.clientHeight;
 
 var chart1BoxWidth = 85;
-var chart1Height = infoPanelDivHeight/5.5;
+var chart1Height = infoPanelDivHeight/5;
 
 
-var chart2Width = 360;
+var chart2Width = 350;
 var chart2Height = infoPanelDivHeight/4;
+console.log(chart1Height);
 
 // var chart1BoxWidth = 120;
 // var chart1Height = 100;
@@ -42,7 +43,7 @@ function yearBoxPlot(query,category){
     infoPanelDivHeight = infoPanelDiv.clientHeight;
     
     // chart1BoxWidth = infoPanelDivWidth/4-10;
-    chart1Height = infoPanelDivHeight/5;
+    // chart1Height = infoPanelDivHeight/6;
     console.log(chart1Height);
 
     $.getJSON('https://parksgps.carto.com/api/v2/sql/?q='+query, function(data) {
@@ -233,11 +234,11 @@ function historicalBoxPlot(query,category){
     // Need to create a function that takes each category, year, and quantiles and plots
     //// Specify the dimensions
     var infoPanelDiv = document.getElementById("info");
-    var width = infoPanelDiv.clientWidth;
-    var height = infoPanelDiv.clientHeight;
+    // var width = infoPanelDiv.clientWidth;
+    // var height = infoPanelDiv.clientHeight;
 
-    chart2Width = width-30;
-    chart1Height = height/4;
+    // chart2Width = width-30;
+    // chart2Height = height/4;
     var margin = {top: 10, right: 10, bottom: 20, left:32},
             width = chart2Width - margin.left - margin.right,
             height = chart2Height - margin.top - margin.bottom;           
