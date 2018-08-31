@@ -226,9 +226,9 @@ background: repeating-linear-gradient(-45deg,        #ff0000,   #ff0000 5px,   #
 
 /*Intro Segment*/
 .introSegment{
-  position: absolute;
-  
-  top: 15%;
+  /*position: absolute;*/
+  overflow-y:auto;
+  /*top: -25%;*/
   width: 50% !important;
 }
 .introHeader{
