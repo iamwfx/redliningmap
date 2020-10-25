@@ -1,4 +1,8 @@
-// Set the map to width to change on window resize
+// Resize map based on window width
+var w = window.innerWidth;
+	$('#left').css("cssText", `width: ${w-380-15}px !important;`);
+	$('#right').css("cssText", `width: ${w-380-15}px !important;`);
+// Set the map to width to change on window resize	
 window.addEventListener("resize", function(){
 	var w = window.innerWidth;
 	$('#left').css("cssText", `width: ${w-380-15}px !important;`);
