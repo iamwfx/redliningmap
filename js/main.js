@@ -270,12 +270,15 @@ const map = new mapboxgl.Compare(mapRedline, mapCensus, {
 });
 
 
-var holcOverlaySource = new carto.source.SQL(`
-	SELECT * from holc_overlay_2016
-	`, {
-	  user:  'parksgps',
-	  apiKey: 'a5egxawWBp3cGSA9Fcxd4A'
-	});
+var holcOverlaySource = new carto.source.Dataset('holc_overlay_2016');
+// var holcOverlaySource = new carto.source.SQL(`
+// 	SELECT * from holc_overlay_2016
+// 	`, {
+// 	  user:  'parksgps',
+// 	  // apiKey: 'a5egxawWBp3cGSA9Fcxd4A'
+// 	  apiKey:'default_public'
+// 	});
+// console.log(holcOverlaySource);
 
 /////// Census
 var holcOverlayVizCensus = new carto.Viz(`
@@ -292,11 +295,10 @@ var holcOverlayVizCensus = new carto.Viz(`
   @unemployed_perc:$unemployed_perc
   @unemployed_perc_css:$unemployed_perc*10
   @college_perc:$college_perc
-  color: opacity(ramp(viewportQuantiles($colored_perc,5), PINK_WX),@colored_perc*1.5)
+  color: opacity(ramp(viewportQuantiles($colored_perc,5), [#f0d9dd,#f2afb9,#ef8491,#e75567,#d9033c]),@colored_perc*1.5)
   strokeWidth: 0
   strokeColor: rgba(255, 255, 255,0.01)
 `);
-
 ///// Redline
 var holcOverlayVizRedline = new carto.Viz(`
   @city:$city
@@ -318,7 +320,9 @@ var holcOverlayVizRedline = new carto.Viz(`
 
 
 var holcOverlayLayerCensus = new carto.Layer('holcOverlayLayerCensus', holcOverlaySource, holcOverlayVizCensus);
+console.log(holcOverlayLayerCensus)
 holcOverlayLayerCensus.addTo(mapCensus);
+
 
 var holcOverlayLayerRedline = new carto.Layer('holcOverlayLayerRedline', holcOverlaySource, holcOverlayVizRedline);
 holcOverlayLayerRedline.addTo(mapRedline);
@@ -644,15 +648,15 @@ function updateCensusMap(city,category,year,overlay,overlaySource){
 	////// We're going to decrease opacity in lower percentages.
 	////// For all other census categories, we'll set a standard opacity of 0.7
 	const censusColors ={
-		'white_perc':'color:opacity(ramp(viewportQuantiles($white_perc,5), BLUE_WX),@white_perc)\n',
-        'colored_perc':"color:opacity(ramp(viewportQuantiles($colored_perc,5), PINK_WX),@colored_perc_css)\n",
-        'hispanic_perc':"color:opacity(ramp(viewportQuantiles($hispanic_perc,5), PURPLE_WX),@hispanic_perc_css)\n",
-        'other_perc':"color:opacity(ramp(viewportQuantiles($other_perc,5), ORANGE_WX),@other_perc_css)\n",
-        'population_density':"color:opacity(ramp(viewportQuantiles($population_density,7), POPULATION_DENS_WX),.8)\n",
-        'population':"color:opacity(ramp(viewportQuantiles($population,7), POPULATION_WX),.8)\n",
-        'college_perc':'color:opacity(ramp(viewportQuantiles($college_perc,5), COLLEGE_WX),@college_perc_css)\n',
-        'median_income_adj':"color:opacity(ramp(viewportQuantiles($median_income_adj,7), INCOME_WX),.7)\n",
-        'unemployed_perc':'color:opacity(ramp(viewportQuantiles($unemployed_perc,5), UNEMPLOY_WX),@unemployed_perc_css)\n'}
+		'white_perc':'color:opacity(ramp(viewportQuantiles($white_perc,5), [#e8eaf6,#7986cb,#3f51b5,#303f9f,#1a237e]),@white_perc)\n',
+        'colored_perc':"color:opacity(ramp(viewportQuantiles($colored_perc,5), [#f0d9dd,#f2afb9,#ef8491,#e75567,#d9033c]),@colored_perc_css)\n",
+        'hispanic_perc':"color:opacity(ramp(viewportQuantiles($hispanic_perc,5), [#e1bee7,#ba68c8,#9c27b0,#7b1fa2,#4a148c]),@hispanic_perc_css)\n",
+        'other_perc':"color:opacity(ramp(viewportQuantiles($other_perc,5), [#ffe0b2,#ffb74d,#ff9800,#f57c00,#e65100]),@other_perc_css)\n",
+        'population_density':"color:opacity(ramp(viewportQuantiles($population_density,7), [#d1eeea,#a8dbd9,#85c4c9,#68abb8,#4f90a6,#3b738f,#2a5674]),.8)\n",
+        'population':"color:opacity(ramp(viewportQuantiles($population,7), [#f3e0f7,#e4c7f1,#d1afe8,#b998dd,#9f82ce,#826dba,#63589f]),.8)\n",
+        'college_perc':'color:opacity(ramp(viewportQuantiles($college_perc,5), [#DEEACC,#AACF92,#72B461,#39993A,#1B7E2F]),@college_perc_css)\n',
+        'median_income_adj':"color:opacity(ramp(viewportQuantiles($median_income_adj,7), [#cf597e,#e88471,#eeb479,#e9e29c,#9ccb86,#39b185,#009392]),.7)\n",
+        'unemployed_perc':'color:opacity(ramp(viewportQuantiles($unemployed_perc,5), [#F2DDDF,#DE98A2,#CA5C6C,#B6293F,#A2001A]),@unemployed_perc_css)\n'}
     const vizDict = {'city':`@city:$city\n`,
 		'population_density':`@population_density:$population_density\n`,
 		'population':`@population:$population\n`,

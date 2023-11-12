@@ -23,7 +23,7 @@ a{
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	width: 72%;
+/*	width: 72%;*/
 }
 .mapboxgl-compare{
   background-color: #ff4b19;
@@ -39,11 +39,14 @@ a{
 }
 #info {
 	position: absolute;
+  height: 100%;
 	right: 0;
 	top:0;
 	bottom: 0;
 	padding: 15px;
 	width: 380px;
+  z-index: 1; /* Stay on top */
+
 }
 pusher{
 	padding-left:0;
@@ -130,7 +133,8 @@ body * {
 }
 .box {
   font: 10px sans-serif;
- 
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.24) !important;
+  padding:0px !important;
   
 }
 

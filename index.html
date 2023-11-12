@@ -8,15 +8,21 @@
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Semantic UI -->
-    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
-    <script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    
-    crossorigin="anonymous"></script>
-    <script src="semantic/dist/semantic.min.js"></script>
-    <script src="semantic/dist/components/dropdown.js"></script>
-    <link rel="stylesheet" type="text/css" href="semantic/dist/components/dropdown.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- Semantic -->
+    <!-- <script src="semantic/dist/semantic.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- <script src="semantic/dist/components/dropdown.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.js" integrity="sha512-PD2QRjH0s7TFz8Oicpi4UFJBdKP0vFeYpmNPsEoNDHfG3QcGLTs8XUrkXWEQXX2Q0g+1oEwvow27TM2VfPdTxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="semantic/dist/components/dropdown.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.css" integrity="sha512-tdyzfjYDk2OR9L10jvzzuGUB0Rvl5fyMW/Z8yfbYyyENfuXxtcDtEq7d/PdiA0hzQzXjWwvZasjEp8Joli2tkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
     <!-- Range Slider -->
     <script src="js/d3-simple-slider-wfx.js"></script>
     
@@ -28,8 +34,9 @@
     <script src="js/d3v3.js"></script>
     <!-- Mapbox -->
     
-    <script src="https://cartodb-libs.global.ssl.fastly.net/mapbox-gl/v0.44.1-carto1/mapbox-gl.js"></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css' type='text/css' />
     
@@ -37,7 +44,9 @@
     <link href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" rel="stylesheet">
     
     <!-- CARTO  -->
-    <script src="js/dist/carto-vl.js"></script>
+    <script src="https://libs.cartocdn.com/carto-vl/v1.4.4/carto-vl.min.js"></script>
+    <!-- <script src="dist/carto-vl.js"></script> -->
+    <link href="https://carto.com/developers/carto-vl/v1.4.4/examples/maps/style.css" rel="stylesheet">
     
     <!-- City params -->
     <script  src="js/cities.js"></script>
@@ -68,13 +77,9 @@
       </div>
 
       <div class = 'container' id='mapcontainer'>
-        <!-- <div id='map'></div> -->
-        <div id='left' class='map'>
-          <!-- <div id='titleLeft'>Test</div> -->
-        </div>
+        <div id='left' class='map'></div>
         
-        <div id='right' class='map'>
-        </div>
+        <div id='right' class='map'></div>
      
       </div>
       <div class="container" id="menucontainer">
@@ -134,7 +139,7 @@
       </div>
       <!-- Widget Panel -->
       <!-- <div id ='info'> -->
-      <div  id ='info' ">
+      <div  id ='info' >
  
         <h5> City</h5>
         <div id = "cityDropdown1" class="ui fluid search selection dropdown">
@@ -168,7 +173,7 @@
       <div class="ui message floating transition hidden infoSegment" id='infoMessage'>
         <i class="large close red icon"></i>
         <h5>History of the HOLC "Redlining" Maps</h5>
-        <p ">The Home Owners' Loan Corportation (HOLC) was a New Deal era agency that helped provide emergency bailouts to banks and homeowners during the 1930s mortgage crisis that resulted from the Great Depression. The HOLC created credit worthiness maps for local banks and the Federal Housing Administration that indicated the lending risk by neighborhood. Since risk is based on property values as well as individual credit worthiness, the agency relied on local banks and realtors in 239 cities to appraise neighborhoods based for various levels of economic conditions, categorizing them into "Best", "Still Desirable", "Definitely Declining", and "Hazardous".</p>
+        <p>The Home Owners' Loan Corportation (HOLC) was a New Deal era agency that helped provide emergency bailouts to banks and homeowners during the 1930s mortgage crisis that resulted from the Great Depression. The HOLC created credit worthiness maps for local banks and the Federal Housing Administration that indicated the lending risk by neighborhood. Since risk is based on property values as well as individual credit worthiness, the agency relied on local banks and realtors in 239 cities to appraise neighborhoods based for various levels of economic conditions, categorizing them into "Best", "Still Desirable", "Definitely Declining", and "Hazardous".</p>
         <p>Guidelines for lenders are: 
           <ul>
             <li>"The <b>First grade or A areas</b> are 'hot spots'; they are not fully built up. In demand during good times and bad.</li>
@@ -261,13 +266,13 @@
     <script src='js/charts.js'></script>
     
   <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  // (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  // (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  // m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  // })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-91894646-1', 'auto');
-  ga('send', 'pageview');
+  // ga('create', 'UA-91894646-1', 'auto');
+  // ga('send', 'pageview');
 
 </script>
 
